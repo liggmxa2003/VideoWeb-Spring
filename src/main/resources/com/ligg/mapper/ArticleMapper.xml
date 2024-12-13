@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ligg.mapper.ArticleMapper">
+
+    <insert id="add">
+        insert into article(title,content,cover_img,state,category_id,create_user,create_time,update_time)
+        values (#{title},#{content},#{coverImg},#{state},#{categoryId},#{createUser},now(),now())
+    </insert>
+    <!--  修改文章 -->
+    <update id="update">
+        update article
+        <set>
+            <if test="title != null">
+                title = #{title},
+            </if>
+            <if test="content != null">
+                content = #{content},
+            </if>
+            <if test="coverImg != null">
+                cover_img = #{coverImg},
+            </if>
+            <if test="state != null">
+                state = #{state},
+            </if>
+            <if test="categoryId != null">
+                category_id = #{categoryId},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--  查询文章 -->
+    <select id="list" resultType="com.ligg.pojo.Article">
+        select
+        a.id,
+        a.title,
+        a.content,
+        a.cover_img as coverImg,
+        a.state,
+        a.category_id as categoryId,
+#         a.create_user as createUser,
+        a.create_time as createTime,
+        a.update_time as updateTime,
+        c.category_name as categoryName
+        from
+        article a
+        left join
+        category c on a.category_id = c.id
+        where
+        1=1
+        <if test="categoryId != null">
+            and a.category_id = #{categoryId}
+        </if>
+        <if test="state != null">
+            and a.state = #{state}
+        </if>
+        and a.create_user = #{userId}
+    </select>
+
+</mapper>
