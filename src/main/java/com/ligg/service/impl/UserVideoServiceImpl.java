@@ -31,4 +31,12 @@ public class UserVideoServiceImpl implements UserVideoService {
         Integer userId = (Integer) map.get("id");
         return userVideoMapper.list(userId);
     }
+    // 更新用户视频
+    @Override
+    public void update(UserVideo userVideo) {
+        Map<String, Object> map = ThreadLocalUtil.get();
+        userVideo.setUserId((Integer) map.get("id"));
+        userVideoMapper.update(userVideo);
+    }
+
 }

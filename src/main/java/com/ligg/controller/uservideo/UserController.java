@@ -1,4 +1,4 @@
-package com.ligg.controller.user;
+package com.ligg.controller.uservideo;
 
 import com.ligg.pojo.Result;
 import com.ligg.pojo.User;

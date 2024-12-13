@@ -9,4 +9,7 @@ public interface UserVideoService {
     void add(UserVideo userVideo);
     // 查询
     List<UserVideo> list();
+    // 修改
+    void update(UserVideo userVideo);
+    //根据用户id查阅视频信息
 }
