@@ -22,6 +22,7 @@ public class Video {
     @NotEmpty
     private String cover;//封面
     private Integer userId;//用户id
+    private String nickname;//用户昵称
     @NotEmpty
     @Pattern(regexp = "^\\S{2,300}$")
     private String content;//视频介绍
