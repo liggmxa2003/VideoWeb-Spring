@@ -1,15 +1,12 @@
 package com.ligg.service.impl;
 
-import com.ligg.mapper.UserMapper;
+import com.ligg.mapper.user.UserMapper;
 import com.ligg.pojo.User;
 import com.ligg.service.UserService;
 import com.ligg.utils.Md5Util;
 import com.ligg.utils.ThreadLocalUtil;
-import jakarta.validation.constraints.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-import org.springframework.validation.annotation.Validated;
 
 import java.util.Map;
 

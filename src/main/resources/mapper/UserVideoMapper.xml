@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ligg.mapper.user.UserVideoMapper">
+    <!--编辑用户视频信息-->
+
+    <update id="update">
+            update user_video
+            <set>
+                <if test="title!=null">
+                    title=#{title},
+                </if>
+                <if test="cover!=null">
+                    cover=#{cover},
+                </if>
+                <if test="content!=null">
+                    content=#{content},
+                </if>
+                update_time=now()
+            </set>
+            where id=#{id}
+        </update>
+</mapper>

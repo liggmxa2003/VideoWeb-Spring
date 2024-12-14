@@ -13,8 +13,8 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserVideo {
-    @NotNull(groups = UserVideo.Update.class)
+public class Video {
+    @NotNull(groups = Video.Update.class)
     private Integer id;//id
     @NotEmpty
     @Pattern(regexp = "^\\S{2,20}$")
@@ -23,7 +23,7 @@ public class UserVideo {
     private String cover;//封面
     private Integer userId;//用户id
     @NotEmpty
-    @Pattern(regexp = "^\\S{10,200}$")
+    @Pattern(regexp = "^\\S{2,300}$")
     private String content;//视频介绍
     private LocalDateTime createTime;//发布时间
     private LocalDateTime updateTime;//更新时间

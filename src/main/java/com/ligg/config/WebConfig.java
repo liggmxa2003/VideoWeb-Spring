@@ -19,9 +19,10 @@ public class WebConfig implements WebMvcConfigurer {
                 //放行路径
                 .excludePathPatterns("/user")
                 .excludePathPatterns("/user/login")
-                .excludePathPatterns("/user/register");
-                    //拦截路径damin下的所有路径
-                /*.addPathPatterns("/admin/**");*/
+                .excludePathPatterns("/user/register")
+                .excludePathPatterns("/video/**")
+                //拦截路径
+                .addPathPatterns("/user/**");
     }
     //配置跨域
     /**

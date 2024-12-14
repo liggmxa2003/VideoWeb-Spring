@@ -1,11 +1,11 @@
-package com.ligg.service.impl.uservideoimpl;
+package com.ligg.service.impl.userimpl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.ligg.mapper.UserVideoMapper;
+import com.ligg.mapper.user.UserVideoMapper;
 import com.ligg.pojo.PageBean;
-import com.ligg.pojo.UserVideo;
-import com.ligg.service.UserVideo.UserVideoService;
+import com.ligg.pojo.Video;
+import com.ligg.service.User.UserVideoService;
 import com.ligg.utils.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +23,7 @@ public class UserVideoServiceImpl implements UserVideoService {
 
     // 添加用户视频
     @Override
-    public void add(@RequestBody UserVideo userVideo) {
+    public void add(@RequestBody Video userVideo) {
         Map<String, Object> map = ThreadLocalUtil.get();
         userVideo.setUserId((Integer) map.get("id"));
         userVideoMapper.add(userVideo);
@@ -31,17 +31,17 @@ public class UserVideoServiceImpl implements UserVideoService {
 
     // 分页查询用户视频信息列表
     @Override
-    public PageBean<UserVideo> list(Integer pageNum, Integer pageSize, Integer categoryId, String state) {
+    public PageBean<Video> list(Integer pageNum, Integer pageSize, Integer categoryId, String state) {
         // 封装分页数据
-        PageBean<UserVideo> pb = new PageBean<>();
+        PageBean<Video> pb = new PageBean<>();
         //开启分页查询
         PageHelper.startPage(pageNum, pageSize);
         //获取用户id
         Map<String, Object> map = ThreadLocalUtil.get();
         Integer userId = (Integer) map.get("id");
-        List<UserVideo> as = userVideoMapper.list(userId,categoryId,state);
+        List<Video> as = userVideoMapper.list(userId,categoryId,state);
         //Page提供了方法，可以获取PageHelper分页查询后得到的总记录条数和当前页数据
-        Page<UserVideo> p = (Page<UserVideo>) as;
+        Page<Video> p = (Page<Video>) as;
         //把数据填充到PageBean中
         pb.setItems(p.getResult());
         pb.setTotal(p.getTotal());
@@ -50,21 +50,21 @@ public class UserVideoServiceImpl implements UserVideoService {
 
     // 更新用户视频
     @Override
-    public void update(UserVideo userVideo) {
+    public void update(Video userVideo) {
         userVideoMapper.update(userVideo);
     }
     // 删除用户视频
     @Override
-    public void delete(UserVideo userVideo) {
+    public void delete(Video userVideo) {
         userVideoMapper.delete(userVideo);
     }
 
     // 根据用户id查询用户视频
     @Override
-    public Boolean listByUserId(UserVideo userVideo) {
+    public Boolean listByUserId(Video userVideo) {
         Map<String, Object> map = ThreadLocalUtil.get();
         userVideo.setUserId((Integer) map.get("id"));
-        UserVideo u = userVideoMapper.findById(userVideo);
+        Video u = userVideoMapper.findById(userVideo);
         /*if (u.getUserId() != userVideo.getUserId())
             return false;
         return true;*/
@@ -74,8 +74,8 @@ public class UserVideoServiceImpl implements UserVideoService {
     }
     // 根据id查询视频信息
     @Override
-    public boolean findById(UserVideo userVideo) {
-        UserVideo byId = userVideoMapper.findById(userVideo);
+    public boolean findById(Video userVideo) {
+        Video byId = userVideoMapper.findById(userVideo);
         return byId != null;
     }
 }
