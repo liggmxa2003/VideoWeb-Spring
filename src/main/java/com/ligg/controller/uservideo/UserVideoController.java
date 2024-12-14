@@ -1,5 +1,6 @@
 package com.ligg.controller.uservideo;
 
+import com.ligg.pojo.PageBean;
 import com.ligg.pojo.Result;
 import com.ligg.pojo.UserVideo;
 import com.ligg.service.UserVideo.UserVideoService;
@@ -16,17 +17,23 @@ public class UserVideoController {
     @Autowired
     UserVideoService userVideoService;
 
+    //分页查询用户视频信息列表
+    @GetMapping
+    public Result<PageBean<UserVideo>> list(
+            Integer pageNum,//当前页
+            Integer pageSize,//每页条数
+            @RequestParam(required = false) Integer categoryId,//分类id
+            @RequestParam(required = false) String state //发布状态
+    ){
+        PageBean<UserVideo> pb = userVideoService.list(pageNum,pageSize,categoryId,state);
+        return Result.success(pb);
+    }
     //发布用户视频
     @PostMapping
     public Result add(@RequestBody @Validated(UserVideo.Add.class) UserVideo userVideo){
         //发布视频
         userVideoService.add(userVideo);
         return Result.success();
-    }
-    //获取用户发布时视频列表
-    @GetMapping
-    public Result<List<UserVideo>> list(){
-        return Result.success(userVideoService.list());
     }
     //编辑用户是视频
     @PutMapping

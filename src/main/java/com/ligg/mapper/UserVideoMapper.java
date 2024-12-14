@@ -14,9 +14,9 @@ public interface UserVideoMapper {
     @Insert("insert into user_video(title,cover,user_id,content,create_time,update_time)"+
             "values(#{title},#{cover},#{userId},#{content},NOW(),NOW())")
     void add(UserVideo userVideo);
-    // 查询用户视频
+    // 分页查询用户视频
     @Select("select * from user_video where user_id=#{userId} order by update_time desc")
-    List<UserVideo> list(Integer userId);
+    List<UserVideo> list(Integer userId,Integer categoryId,String state);
     // 修改用户视频信息
     void update(UserVideo userVideo);
     // 根据用户id查询视频信息

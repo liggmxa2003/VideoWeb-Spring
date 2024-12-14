@@ -1,6 +1,9 @@
 package com.ligg.service.impl.uservideoimpl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.ligg.mapper.UserVideoMapper;
+import com.ligg.pojo.PageBean;
 import com.ligg.pojo.UserVideo;
 import com.ligg.service.UserVideo.UserVideoService;
 import com.ligg.utils.ThreadLocalUtil;
@@ -26,12 +29,23 @@ public class UserVideoServiceImpl implements UserVideoService {
         userVideoMapper.add(userVideo);
     }
 
-    // 查询用户视频
+    // 分页查询用户视频信息列表
     @Override
-    public List<UserVideo> list() {
+    public PageBean<UserVideo> list(Integer pageNum, Integer pageSize, Integer categoryId, String state) {
+        // 封装分页数据
+        PageBean<UserVideo> pb = new PageBean<>();
+        //开启分页查询
+        PageHelper.startPage(pageNum, pageSize);
+        //获取用户id
         Map<String, Object> map = ThreadLocalUtil.get();
         Integer userId = (Integer) map.get("id");
-        return userVideoMapper.list(userId);
+        List<UserVideo> as = userVideoMapper.list(userId,categoryId,state);
+        //Page提供了方法，可以获取PageHelper分页查询后得到的总记录条数和当前页数据
+        Page<UserVideo> p = (Page<UserVideo>) as;
+        //把数据填充到PageBean中
+        pb.setItems(p.getResult());
+        pb.setTotal(p.getTotal());
+        return pb;
     }
 
     // 更新用户视频
