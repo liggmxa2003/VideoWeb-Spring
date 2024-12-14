@@ -1,19 +1,13 @@
 package com.ligg.controller;
 
-import com.github.pagehelper.PageHelper;
 import com.ligg.pojo.Article;
 import com.ligg.pojo.PageBean;
 import com.ligg.pojo.Result;
 import com.ligg.service.ArticleService;
-import com.ligg.utils.JwtUtil;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.constraints.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-import java.util.Map;
 //文章接口
 @RestController
 @RequestMapping("/article")
@@ -32,7 +26,7 @@ public class ArticleController {
         articleService.add(article);
         return Result.success();
     }
-    //文章列表
+    //获取文章列表
     @GetMapping
     public Result<PageBean<Article>> list(
             Integer pageNum,

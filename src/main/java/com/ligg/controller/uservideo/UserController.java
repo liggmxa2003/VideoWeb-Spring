@@ -62,7 +62,7 @@ public class UserController {
             String token = JwtUtil.genToken(claims);
             //把token存储到Redis中
             ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
-            operations.set(token,token,1, TimeUnit.HOURS);//1小时
+            operations.set(token,token,3, TimeUnit.HOURS);//1小时
             return Result.success(token);
         }
             return Result.error("密码错误");

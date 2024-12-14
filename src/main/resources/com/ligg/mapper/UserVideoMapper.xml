@@ -18,6 +18,6 @@
             </if>
             update_time=now()
         </set>
-        where user_id=#{userId} and id=#{id}
+        where id=#{id}
     </update>
 </mapper>

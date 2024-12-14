@@ -1,4 +1,4 @@
-package com.ligg.service;
+package com.ligg.service.UserVideo;
 
 import com.ligg.pojo.UserVideo;
 
@@ -11,5 +11,10 @@ public interface UserVideoService {
     List<UserVideo> list();
     // 修改
     void update(UserVideo userVideo);
-    //根据用户id查阅视频信息
+    // 删除
+    void delete(UserVideo userVideo);
+    //用户视频信息校验
+    Boolean listByUserId(UserVideo userVideo);
+    // 根据id查询
+    boolean findById(UserVideo userVideo);
 }
