@@ -13,9 +13,14 @@ public class VideoServiceImpl implements VideoService {
 
     @Autowired
     VideoMapper videoMapper;
-
+    // 查询所有视频
     @Override
     public List<Video> list() {
         return videoMapper.list();
+    }
+    // 根据id查询视频
+    @Override
+    public Video findById(Integer id) {
+        return videoMapper.findById(id);
     }
 }

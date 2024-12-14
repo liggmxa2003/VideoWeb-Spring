@@ -16,10 +16,16 @@ public class VideoController {
 
     @Autowired
     VideoService videoService;
-
+    // 查询所有视频
     @GetMapping
     public Result<List<Video>> list() {
         List<Video> list = videoService.list();
         return Result.success(list);
+    }
+    //获取视频详细信息
+    @GetMapping("/videoInfo")
+    public Result videoInfo(Integer id){
+        Video video = videoService.findById(id);
+        return Result.success(video);
     }
 }
