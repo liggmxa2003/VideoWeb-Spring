@@ -4,6 +4,12 @@ spring:
     url: jdbc:mysql://localhost:3306/blibliWeb?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8
     username: root
     password: 200309
+  ## 邮件配置
+  mail:
+    host: smtp.163.com
+    username: 19971481405@163.com
+    password: WH8VTGgnSg5hkEZV
+    port: 25
   data:
     ##Redis非关系形数据库配置
     redis:
