@@ -6,6 +6,8 @@ import com.ligg.service.UserService;
 import com.ligg.utils.JwtUtil;
 import com.ligg.utils.Md5Util;
 import com.ligg.utils.ThreadLocalUtil;
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +58,7 @@ public class UserController {
         }
         if (Md5Util.getMD5String(password).equals(loginUser.getPassword())){
             //登录
-            Map<String, Object> claims = new HashMap<>();
+            Map<String, Object> claims = new HashMap<>();//存储用户信息
             claims.put("id",loginUser.getId());
             claims.put("username",loginUser.getUsername());
             String token = JwtUtil.genToken(claims);
@@ -124,5 +126,14 @@ public class UserController {
         ValueOperations<String,String> operations = stringRedisTemplate.opsForValue();
         operations.getOperations().delete(token);
         return Result.success();
+    }
+
+    //发送邮箱验证码
+    @PostMapping("/email")
+    public Result<String> sendEmail(@RequestParam("email") @Email String email, HttpSession session){
+        if (userService.sendValidateCode(email,session.getId()))
+
+            return Result.success();
+        return Result.error("验证码发送失败，请检查邮箱地址");
     }
 }

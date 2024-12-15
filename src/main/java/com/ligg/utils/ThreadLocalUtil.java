@@ -1,8 +1,5 @@
 package com.ligg.utils;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * ThreadLocal 工具类
  */

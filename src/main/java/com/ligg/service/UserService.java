@@ -16,4 +16,6 @@ public interface UserService {
     void updateAvatar(String avatarUrl);
     // 重置密码
     void updatePassword(String newPassword, Integer id);
+    // 发送验证码
+    boolean sendValidateCode(String email,String sessionId);
 }

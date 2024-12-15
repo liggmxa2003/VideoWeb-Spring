@@ -29,7 +29,7 @@ public class FileUploadController {
     private String domain; // 七牛云存储空间的域名
 
     @Value("${qiniu.video-path}")
-    private String videoPrefox;
+    private String videoPrefox;//视频文件路径
 
     // 视频文件上传接口
     @PostMapping("/uploadVideo")
