@@ -12,9 +12,9 @@ public interface UserMapper {
     @Select("select * from user where username=#{username}")
     User findByUserName(String username);
     // 注册
-    @Insert("insert into user(username,password,create_time,update_time)" +
-            "values (#{username},#{password},now(),now())")
-    void add(String username, String password);
+    @Insert("insert into user(username,password,email,create_time,update_time)" +
+            "values (#{username},#{password},#{email},now(),now())")
+    void add(User user);
     // 更新
     @Update("update user set nickname=#{nickname},email=#{email},update_time=now() where id=#{id}")
     void update(User user);
@@ -25,4 +25,7 @@ public interface UserMapper {
     @Update("update user set password=#{password},update_time=now() where id=#{id}")
     void updatePassword(String password, Integer id);
 
+    // 根据邮箱查询用户
+    @Select("select * from user where email=#{email}")
+    String findByUSerEmail(String email);
 }

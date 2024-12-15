@@ -38,11 +38,23 @@ public class UserServiceImpl implements UserService {
 
     //注册用户
     @Override
-    public void register(String username, String password) {
-        //MD5加密
-        String md5String = Md5Util.getMD5String(password);
-        //注册用户
-        userMapper.add(username, md5String);
+    public String register(User user, String sessionId) {
+        String key = "email" + sessionId + ":" + user.getEmail();
+        if (Boolean.TRUE.equals(stringRedisTemplate.hasKey(key))) {
+            String s = stringRedisTemplate.opsForValue().get(key);
+            if (/*user.getCode().equals(s)*/String.valueOf(user.getCode()).equals(s)) {
+                //MD5加密
+                String md5String = Md5Util.getMD5String(user.getPassword());
+                user.setPassword(md5String);
+                //注册用户
+                userMapper.add(user);
+                return null;
+            } else {
+                return "验证码错误";
+            }
+        } else {
+            return "请先获取验证码";
+        }
     }
 
     //修改用户信息
@@ -76,13 +88,15 @@ public class UserServiceImpl implements UserService {
      */
     //发送验证码
     @Override
-    public boolean sendValidateCode(String email,String sessionId) {
-        String key = "email" + sessionId + ":" +email;
-        if (Boolean.TRUE.equals(stringRedisTemplate.hasKey(key))){
-            Long expire = Optional.ofNullable(stringRedisTemplate.getExpire(key,TimeUnit.SECONDS)).orElse(0L);
+    public String sendValidateCode(String email, String sessionId) {
+        String key = "email" + sessionId + ":" + email;
+        if (Boolean.TRUE.equals(stringRedisTemplate.hasKey(key))) {
+            Long expire = Optional.ofNullable(stringRedisTemplate.getExpire(key, TimeUnit.SECONDS)).orElse(0L);
             if (expire > 120)
-                return false;
+                return "邮件发送频发，请三分钟后在重新发送";
         }
+        if (userMapper.findByUSerEmail(email) != null)
+            return "邮箱已被注册";
         //生成验证码
         Random random = new Random();
         int code = random.nextInt(899999) + 100000;
@@ -97,11 +111,11 @@ public class UserServiceImpl implements UserService {
             //发送验证码
             mailSender.send(message);
             //邮箱和验证码保存到Redis中
-            stringRedisTemplate.opsForValue().set(key,String.valueOf(code),3, TimeUnit.MINUTES);
-            return true;
+            stringRedisTemplate.opsForValue().set(key, String.valueOf(code), 3, TimeUnit.MINUTES);
+            return null;
         } catch (MailException e) {
             e.printStackTrace();
-            return false;
+            return "验证码获取失败，请检查游戏是否正确";
         }
     }
 

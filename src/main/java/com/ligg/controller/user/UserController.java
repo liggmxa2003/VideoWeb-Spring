@@ -31,47 +31,57 @@ public class UserController {
     UserService userService;
     @Autowired
     StringRedisTemplate stringRedisTemplate;
+
+
     // 注册
     @PostMapping("/register")
-    public Result register(@Pattern(regexp = "[a-z A-Z0-9]{5,15}") String username,
-                           @Pattern(regexp = "[a-z A-Z0-9]{6,15}")String password){
+    public Result<String> register(@Validated(User.Add.class) User user, HttpSession sessions) {
         //查询用户
-        User user = userService.findByUsername(username);
-        if (user == null){
-            //用户名为空，注册用户.
-            userService.register(username, password);
-            return Result.success();
-        }else {
-            //用户名不为空,返回提示信息.
+        User u = userService.findByUsername(user.getUsername());
+        if (u != null)
             return Result.error("用户名已存在");
-        }
+        String s = userService.register(user, sessions.getId());
+        if (s == null)
+            return Result.success();
+        else
+            return Result.error(s);
     }
 
     //登录
     @PostMapping("/login")
     public Result login(@Pattern(regexp = "[a-z A-Z0-9]{5,15}") String username,
-                        @Pattern(regexp = "[a-z A-Z0-9]{5,15}")String password){
+                        @Pattern(regexp = "[a-z A-Z0-9]{5,15}") String password) {
         //1、判断用户是否存在
         User loginUser = userService.findByUsername(username);
-        if (loginUser == null){
+        if (loginUser == null) {
             return Result.error("用户不存在");
         }
-        if (Md5Util.getMD5String(password).equals(loginUser.getPassword())){
+        if (Md5Util.getMD5String(password).equals(loginUser.getPassword())) {
             //登录
             Map<String, Object> claims = new HashMap<>();//存储用户信息
-            claims.put("id",loginUser.getId());
-            claims.put("username",loginUser.getUsername());
+            claims.put("id", loginUser.getId());
+            claims.put("username", loginUser.getUsername());
             String token = JwtUtil.genToken(claims);
             //把token存储到Redis中
             ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
-            operations.set(token,token,3, TimeUnit.HOURS);//1小时
+            operations.set(token, token, 3, TimeUnit.HOURS);//1小时
             return Result.success(token);
         }
-            return Result.error("密码错误");
+        return Result.error("密码错误");
     }
+
+    //发送邮箱验证码
+    @PostMapping("/email")
+    public Result<String> sendEmail(@RequestParam("email") @Email String email, HttpSession session) {
+        String s = userService.sendValidateCode(email, session.getId());
+        if (s == null)
+            return Result.success();
+        return Result.error(s);
+    }
+
     // 获取用户信息
     @GetMapping("/userInfo")
-    public Result<User> userInfo(){
+    public Result<User> userInfo() {
         Map<String, Object> map = ThreadLocalUtil.get();
         String username = (String) map.get("username");
         //查询用户
@@ -81,59 +91,52 @@ public class UserController {
 
     //更新用户信息
     @PutMapping("/updateUser")
-    public Result update(@RequestBody @Validated User user){
+    public Result update(@RequestBody @Validated(User.Update.class) User user) {
         userService.update(user);
         return Result.success();
     }
 
     //更新用户头像
     @PatchMapping("/updateAvatar")
-    public Result updateAvatar(@RequestParam @URL String avatarUrl){
+    public Result updateAvatar(@RequestParam @URL String avatarUrl) {
         userService.updateAvatar(avatarUrl);
         return Result.success();
     }
 
     //修改密码
     @PatchMapping("/updatePassword")
-    public Result updatePassword(@RequestBody Map<String, String> params,@RequestHeader("Authorization") String token){
+    public Result<String> updatePassword(@RequestBody Map<String, String> params, @RequestHeader("Authorization") String token) {
         //参数校验
         String oldPassword = params.get("old_pwd");
         String newPassword = params.get("new_pwd");
         String rePassword = params.get("re_pwd");
-        if (!StringUtils.hasLength(oldPassword) || !StringUtils.hasLength(newPassword) || !StringUtils.hasLength(rePassword)){
+        if (!StringUtils.hasLength(oldPassword) || !StringUtils.hasLength(newPassword) || !StringUtils.hasLength(rePassword)) {
             return Result.error("缺少参数");
         }
         //获取用户信息
         Map<String, Object> map = ThreadLocalUtil.get();
         String username = (String) map.get("username");
         User loginUser = userService.findByUsername(username);
-        if (!loginUser.getPassword().equals(Md5Util.getMD5String(oldPassword))){
+        if (!loginUser.getPassword().equals(Md5Util.getMD5String(oldPassword))) {
             return Result.error("原始码错误");
         }
-        if (!rePassword.equals(newPassword)){
+        if (!rePassword.equals(newPassword)) {
             return Result.error("两次密码不一致");
         }
-        if (loginUser.getPassword().equals(Md5Util.getMD5String(newPassword))){
+        if (loginUser.getPassword().equals(Md5Util.getMD5String(newPassword))) {
             return Result.error("新密码不能与原始密码一致");
         }
         //判断密码是否小于5位，大于15位
-        if (newPassword.length() < 5 || newPassword.length() > 15){
+        if (newPassword.length() < 5 || newPassword.length() > 15) {
             return Result.error("密码长度需在5-15位之间");
         }
         //修改密码
-        userService.updatePassword(newPassword,loginUser.getId());
+        userService.updatePassword(newPassword, loginUser.getId());
         //删除token
-        ValueOperations<String,String> operations = stringRedisTemplate.opsForValue();
+        ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
         operations.getOperations().delete(token);
         return Result.success();
     }
 
-    //发送邮箱验证码
-    @PostMapping("/email")
-    public Result<String> sendEmail(@RequestParam("email") @Email String email, HttpSession session){
-        if (userService.sendValidateCode(email,session.getId()))
 
-            return Result.success();
-        return Result.error("验证码发送失败，请检查邮箱地址");
-    }
 }
