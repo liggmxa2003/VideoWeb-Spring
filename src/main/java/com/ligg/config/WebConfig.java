@@ -22,7 +22,9 @@ public class WebConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/user/register")
                 .excludePathPatterns("/video/**")
                 //拦截路径
-                .addPathPatterns("/user/**");
+                .addPathPatterns("/user/**")
+                .addPathPatterns("/uploadVideo")
+                .addPathPatterns("/upload");
     }
     //配置跨域
     /**

@@ -5,7 +5,7 @@ import com.ligg.pojo.Video;
 
 public interface UserVideoService {
     // 添加
-    void add(Video userVideo);
+    void add(Video video);
     // 分页查询
     PageBean<Video> list(Integer pageNum, Integer pageSize, Integer categoryId, String state );
     // 修改

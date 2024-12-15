@@ -1,4 +1,4 @@
-package com.ligg.controller.uservideo;
+package com.ligg.controller.user;
 
 import com.ligg.pojo.PageBean;
 import com.ligg.pojo.Result;
@@ -28,9 +28,9 @@ public class UserVideoController {
     }
     //发布用户视频
     @PostMapping
-    public Result add(@RequestBody @Validated(Video.Add.class) Video userVideo){
+    public Result add(@RequestBody @Validated(Video.Add.class) Video video){
         //发布视频
-        userVideoService.add(userVideo);
+        userVideoService.add(video);
         return Result.success();
     }
     //编辑用户是视频

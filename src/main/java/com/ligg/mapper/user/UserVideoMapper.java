@@ -11,9 +11,9 @@ import java.util.List;
 @Mapper
 public interface UserVideoMapper {
     // 添加用户和视频
-    @Insert("insert into user_video(title,cover,user_id,content,create_time,update_time)"+
-            "values(#{title},#{cover},#{userId},#{content},NOW(),NOW())")
-    void add(Video userVideo);
+    @Insert("insert into user_video(title,cover,user_id,content,video_url,create_time,update_time)"+
+            "values(#{title},#{cover},#{userId},#{content},#{videoUrl},NOW(),NOW())")
+    void add(Video video);
     // 分页查询用户视频
     @Select("select * from user_video where user_id=#{userId} order by update_time desc")
     List<Video> list(Integer userId, Integer categoryId, String state);

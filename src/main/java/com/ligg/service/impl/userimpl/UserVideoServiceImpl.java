@@ -23,10 +23,10 @@ public class UserVideoServiceImpl implements UserVideoService {
 
     // 添加用户视频
     @Override
-    public void add(@RequestBody Video userVideo) {
+    public void add(@RequestBody Video video) {
         Map<String, Object> map = ThreadLocalUtil.get();
-        userVideo.setUserId((Integer) map.get("id"));
-        userVideoMapper.add(userVideo);
+        video.setUserId((Integer) map.get("id"));
+        userVideoMapper.add(video);
     }
 
     // 分页查询用户视频信息列表

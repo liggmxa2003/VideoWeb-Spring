@@ -15,9 +15,9 @@ spring:
       # 启用multipart文件上传功能
       enabled: true
       # 设置单个文件的最大大小为10MBcdm
-      max-file-size: 10MB
+      max-file-size: 1000MB
       # 设置整个HTTP请求的最大大小为10MB，适应单文件或多文件上传
-      max-request-size: 10MB
+      max-request-size: 100MB
 ##开启驼峰命名
 mybatis:
   configuration:
@@ -34,3 +34,4 @@ qiniu:
   secret-key: XQz2Uhqp_AxbIZiMuW8Xof8fJml39vgIRxfcnkXq
   bucket-name: uploadlwz
   domain: http://sncodwj9m.hn-bkt.clouddn.com #https://portal.qiniu.com/
+  video-path: videos/ # 新增的视频文件存储路径或前缀

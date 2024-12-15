@@ -78,4 +78,21 @@ public class QiNiuOssUtil {
         }
     }
 
+    /**
+     * 上传视频文件到七牛云
+     * @param inputStream 视频输入流
+     * @param key 文件名（可选）
+     * @return 上传结果
+     * @throws QiniuException 异常处理
+     */
+    public static String uploadVideo(InputStream inputStream,String key) throws QiniuException{
+        String videoKey = "videos/"+key;// 视频文件名
+        try {
+            Response response = uploadManager.put(inputStream,videoKey,getUpToken(),null,null);
+            // 解析上传成功的结果
+            return response.bodyString();
+        } catch (QiniuException ex){
+            throw ex;
+        }
+    }
 }
