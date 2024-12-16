@@ -3,19 +3,19 @@ package com.ligg.service.impl;
 import com.ligg.mapper.user.UserMapper;
 import com.ligg.pojo.User;
 import com.ligg.service.UserService;
+import com.ligg.utils.JwtUtil;
 import com.ligg.utils.Md5Util;
 import com.ligg.utils.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -39,15 +39,26 @@ public class UserServiceImpl implements UserService {
     //注册用户
     @Override
     public String register(User user, String sessionId) {
-        String key = "email" + sessionId + ":" + user.getEmail();
+        User u = userMapper.findByUserName(user.getUsername());
+        if (u != null)
+            return "用户名已存在";
+        String key = "email" + sessionId + ":" + user.getEmail() + ":false";
         if (Boolean.TRUE.equals(stringRedisTemplate.hasKey(key))) {
-            String s = stringRedisTemplate.opsForValue().get(key);
+            String s = stringRedisTemplate.opsForValue().get(key);//获取Redis中的验证码
+            /**
+             * 注意： user.getCode() 返回的是一个 Integer 类型的对象，而 s 是一个 String 类型。
+             * Integer 和 String 之间不能直接进行 equals 比较。
+             * 需要将将 user.getCode() 转换为 String 类型，然后再进行比较
+             */
+            //较验证码
             if (/*user.getCode().equals(s)*/String.valueOf(user.getCode()).equals(s)) {
                 //MD5加密
                 String md5String = Md5Util.getMD5String(user.getPassword());
                 user.setPassword(md5String);
                 //注册用户
                 userMapper.add(user);
+                //清除Redis中的键值对
+                stringRedisTemplate.delete(key);
                 return null;
             } else {
                 return "验证码错误";
@@ -55,6 +66,53 @@ public class UserServiceImpl implements UserService {
         } else {
             return "请先获取验证码";
         }
+    }
+
+    //重置密码
+    @Override
+    public String updatePasswordWhereEmail(String email, String password, Integer code, String sessionId) {
+        String key = "email" + sessionId + ":" + email + ":true";
+        if (Boolean.TRUE.equals(stringRedisTemplate.hasKey(key))) {
+            String s = stringRedisTemplate.opsForValue().get(key);
+            if (String.valueOf(code).equals(s)) {
+                //判断密码是否重复
+                User user = userMapper.findByUSerEmail(email);
+                String md5String = Md5Util.getMD5String(password);
+                if (user.getPassword().equals(md5String)) {
+                    return "新密码不能与原始密码一致";
+                } else
+                    userMapper.updatePasswordWhereEmail(md5String, email);
+                //清除Redis中的键值对
+                stringRedisTemplate.delete(key);
+                return null;
+            } else {
+                return "验证码错误";
+            }
+        } else
+            return "先获取验证码";
+    }
+    //登录
+    @Override
+    public String login(String username, String password) {
+        User user = userMapper.findByUserName(username);
+        if (user == null)
+            return "用户不存在";
+        if (!Md5Util.getMD5String(password).equals(user.getPassword()))
+            return "密码错误";
+        return null;
+    }
+    //生成token
+    @Override
+    public String userToken(String username, String password) {
+        User user = userMapper.findByUserName(username);
+        Map<String, Object> claims = new HashMap<>();//存储用户信息
+        claims.put("id",user.getId());
+        claims.put("username",user.getUsername());
+        String token = JwtUtil.genToken(claims);
+
+        ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
+        operations.set(token,token,3, TimeUnit.HOURS);//3小时
+        return token;
     }
 
     //修改用户信息
@@ -88,15 +146,16 @@ public class UserServiceImpl implements UserService {
      */
     //发送验证码
     @Override
-    public String sendValidateCode(String email, String sessionId) {
-        String key = "email" + sessionId + ":" + email;
+    public String sendValidateCode(String email, String sessionId, boolean hasUsername) {
+        String key = "email" + sessionId + ":" + email + ":" + hasUsername;
         if (Boolean.TRUE.equals(stringRedisTemplate.hasKey(key))) {
             Long expire = Optional.ofNullable(stringRedisTemplate.getExpire(key, TimeUnit.SECONDS)).orElse(0L);
             if (expire > 120)
-                return "邮件发送频发，请三分钟后在重新发送";
+                return "邮件发送频繁，请三分钟后在重新发送";
         }
-        if (userMapper.findByUSerEmail(email) != null)
-            return "邮箱已被注册";
+        User user = userMapper.findByUSerEmail(email);
+        if (hasUsername && user == null) return "用户邮箱不存在";
+        if (!hasUsername && user != null) return "邮箱已被注册";
         //生成验证码
         Random random = new Random();
         int code = random.nextInt(899999) + 100000;

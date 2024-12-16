@@ -8,6 +8,8 @@ import com.ligg.utils.Md5Util;
 import com.ligg.utils.ThreadLocalUtil;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
 
 //用户接口
 @RestController
@@ -36,10 +39,6 @@ public class UserController {
     // 注册
     @PostMapping("/register")
     public Result<String> register(@Validated(User.Add.class) User user, HttpSession sessions) {
-        //查询用户
-        User u = userService.findByUsername(user.getUsername());
-        if (u != null)
-            return Result.error("用户名已存在");
         String s = userService.register(user, sessions.getId());
         if (s == null)
             return Result.success();
@@ -47,37 +46,36 @@ public class UserController {
             return Result.error(s);
     }
 
-    //登录
-    @PostMapping("/login")
-    public Result login(@Pattern(regexp = "[a-z A-Z0-9]{5,15}") String username,
-                        @Pattern(regexp = "[a-z A-Z0-9]{5,15}") String password) {
-        //1、判断用户是否存在
-        User loginUser = userService.findByUsername(username);
-        if (loginUser == null) {
-            return Result.error("用户不存在");
-        }
-        if (Md5Util.getMD5String(password).equals(loginUser.getPassword())) {
-            //登录
-            Map<String, Object> claims = new HashMap<>();//存储用户信息
-            claims.put("id", loginUser.getId());
-            claims.put("username", loginUser.getUsername());
-            String token = JwtUtil.genToken(claims);
-            //把token存储到Redis中
-            ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
-            operations.set(token, token, 3, TimeUnit.HOURS);//1小时
-            return Result.success(token);
-        }
-        return Result.error("密码错误");
-    }
-
-    //发送邮箱验证码
-    @PostMapping("/email")
-    public Result<String> sendEmail(@RequestParam("email") @Email String email, HttpSession session) {
-        String s = userService.sendValidateCode(email, session.getId());
+    //重置密码
+    @PostMapping("/resetPassword")
+    public Result<String> resetPassword(@Email String email,
+                                        @Pattern(regexp = "[a-z A-Z0-9]{6,15}") String password,
+                                        //验证码必须是6位
+                                        @Min(value = 100000, message = "验证码长度必须是6位")
+                                        @Max(value = 999999, message = "验证码长度必须是6位")
+                                        Integer code,
+                                        HttpSession sessions) {
+        String s = userService.updatePasswordWhereEmail(email,password,code,sessions.getId());
         if (s == null)
             return Result.success();
-        return Result.error(s);
+        else
+            return Result.error(s);
     }
+
+
+    //登录
+    @PostMapping("/login")
+    public Result login(@Pattern(regexp = "[a-z A-Z0-9]{6,15}") String username,
+                        @Pattern(regexp = "[a-z A-Z0-9]{6,15}") String password) {
+        //校验
+        String u = userService.login(username, password);
+        if (u != null)
+            return Result.error(u);
+        //生成token
+        String token = userService.userToken(username,password);
+        return Result.success(token);
+    }
+
 
     // 获取用户信息
     @GetMapping("/userInfo")

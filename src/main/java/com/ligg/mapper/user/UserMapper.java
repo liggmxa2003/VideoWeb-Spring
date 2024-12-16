@@ -27,5 +27,8 @@ public interface UserMapper {
 
     // 根据邮箱查询用户
     @Select("select * from user where email=#{email}")
-    String findByUSerEmail(String email);
+    User findByUSerEmail(String email);
+    // 根据邮箱修改密码
+    @Update("update user set password=#{password},update_time=now() where email=#{email}")
+    void updatePasswordWhereEmail(String password, String email);
 }

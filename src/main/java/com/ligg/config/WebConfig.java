@@ -20,6 +20,8 @@ public class WebConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/user")
                 .excludePathPatterns("/user/login")
                 .excludePathPatterns("/user/register")
+                .excludePathPatterns("/user/resetPassword")
+                .excludePathPatterns("/email")
                 .excludePathPatterns("/video/**")
                 //拦截路径
                 .addPathPatterns("/user/**")

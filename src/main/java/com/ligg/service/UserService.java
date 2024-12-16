@@ -17,5 +17,11 @@ public interface UserService {
     // 重置密码
     void updatePassword(String newPassword, Integer id);
     // 发送验证码
-    String sendValidateCode(String email,String sessionId);
+    String sendValidateCode(String email,String sessionId,boolean hasUsername);
+    // 重置密码
+    String updatePasswordWhereEmail(String email,String password,Integer code,String sessionId);
+    // 登录
+    String login(String username, String password);
+    //token
+    String userToken(String username, String password);
 }
