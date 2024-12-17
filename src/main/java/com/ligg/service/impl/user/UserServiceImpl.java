@@ -25,15 +25,6 @@ import static com.ligg.utils.QiNiuOssUtil.parseKeyFromUrl;
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Value("${qiniu.access-key}")
-    private String accessKey;
-
-    @Value("${qiniu.secret-key}")
-    private String secretKey;
-
-    @Value("${qiniu.bucket-name}")
-    private String bucketName;
-
     @Autowired
     UserMapper userMapper;
     @Autowired
@@ -46,7 +37,7 @@ public class UserServiceImpl implements UserService {
     //根据查询用户名查询用户
     @Override
     public User findByUsername() {
-        Map<String,Object> map = ThreadLocalUtil.get();
+        Map<String, Object> map = ThreadLocalUtil.get();
         String username = (String) map.get("username");
         return userMapper.findByUserName(username);
     }
@@ -106,6 +97,7 @@ public class UserServiceImpl implements UserService {
         } else
             return "先获取验证码";
     }
+
     //登录
     @Override
     public String login(String username, String password) {
@@ -116,38 +108,57 @@ public class UserServiceImpl implements UserService {
             return "密码错误";
         return null;
     }
+
     //生成token
     @Override
     public String userToken(String username, String password) {
         User user = userMapper.findByUserName(username);
         Map<String, Object> claims = new HashMap<>();//存储用户信息
-        claims.put("id",user.getId());
-        claims.put("username",user.getUsername());
+        claims.put("id", user.getId());
+        claims.put("username", user.getUsername());
         String token = JwtUtil.genToken(claims);
 
         ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
-        operations.set(token,token,3, TimeUnit.HOURS);//3小时
+        operations.set(token, token, 3, TimeUnit.HOURS);//3小时
         return token;
     }
 
-    //修改用户信息
-    @Override
-    public String update(User user) throws QiniuException {
-        Map<String, Object> map = ThreadLocalUtil.get();
-        user.setId((Integer) map.get("id"));
-        user.setUsername((String) map.get("username"));
+   // 修改用户信息
+@Override
+public String update(User user) throws QiniuException {
+    Map<String, Object> map = ThreadLocalUtil.get();
 
+    // 空指针检查
+    if (map == null || map.get("id") == null || map.get("username") == null) {
+        throw new IllegalArgumentException("Required parameters are missing in ThreadLocalUtil");
+    }
+
+    user.setId((Integer) map.get("id"));
+    user.setUsername((String) map.get("username"));
+
+    try {
         User oldAvatarUrl = userMapper.findByUserName(user.getUsername());
-        // 如果新头像和旧头像不一样，就删除旧头像
-        if (!Objects.equals(oldAvatarUrl.getUserPic(), user.getUserPic())) {
+
+        // 如果新头像和旧头像不一样，并且旧头像不为空，就删除旧头像
+        if (oldAvatarUrl != null && !Objects.equals(oldAvatarUrl.getUserPic(), user.getUserPic())) {
             if (oldAvatarUrl.getUserPic() != null && !oldAvatarUrl.getUserPic().isEmpty()) {
                 String oldAvatarKey = parseKeyFromUrl(oldAvatarUrl.getUserPic());
-                QiNiuOssUtil.deleteFile(oldAvatarKey);
+                try {
+                    QiNiuOssUtil.deleteFile(oldAvatarKey);
+                } catch (Exception ignored) {
+                }
             }
         }
+
         userMapper.update(user);
-        return null;
+    } catch (Exception e) {
+        // 处理数据库查询异常
+        throw new QiniuException(e, "Failed to update user or find old avatar");
     }
+
+    return null;
+}
+
 
 
     //修改用户头像

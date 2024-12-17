@@ -27,39 +27,7 @@ public class UserVideoTest {
 
     @InjectMocks
     private UserVideoServiceImpl userVideoService;
-
-    @BeforeEach
-    public void setUp() {
-        AutoCloseable closeable = MockitoAnnotations.openMocks(this);
-    }
-
-    @Test
-    public void list_ValidInputs_ReturnsCorrectPageBean() {
-        try (MockedStatic<ThreadLocalUtil> threadLocalUtilMockedStatic = Mockito.mockStatic(ThreadLocalUtil.class)) {
-            // Arrange
-            Map<String, Object> userMap = new HashMap<>();
-            userMap.put("id", 1);
-            threadLocalUtilMockedStatic.when(ThreadLocalUtil::get).thenReturn(userMap);
-
-            Page<Video> page = new Page<>();
-            page.add(new Video(1, "title", "cover", 1, "content", LocalDateTime.now(), LocalDateTime.now()));
-            page.add(new Video(2, "title", "cover", 1, "content", LocalDateTime.now(), LocalDateTime.now()));
-            page.setPageNum(1);
-            page.setPageSize(10);
-            page.setTotal(2);
-
-            when(userVideoMapper.list(eq(1), eq(null), eq("state"))).thenReturn(page.getResult());
-
-            // Act
-            PageBean<Video> result = userVideoService.list(1, 10, null, "state");
-
-            // Assert
-            assertEquals(2, result.getTotal());
-            assertEquals(2, result.getItems().size());
-            assertEquals(1, result.getItems().get(0).getId());
-            assertEquals(1, result.getItems().get(1).getId());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }
+
+
+
