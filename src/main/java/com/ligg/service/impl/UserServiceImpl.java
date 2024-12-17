@@ -32,7 +32,9 @@ public class UserServiceImpl implements UserService {
 
     //根据查询用户名查询用户
     @Override
-    public User findByUsername(String username) {
+    public User findByUsername() {
+        Map<String,Object> map = ThreadLocalUtil.get();
+        String username = (String) map.get("username");
         return userMapper.findByUserName(username);
     }
 
@@ -117,10 +119,12 @@ public class UserServiceImpl implements UserService {
 
     //修改用户信息
     @Override
-    public void update(User user) {
+    public String update(User user) {
         Map<String, Object> map = ThreadLocalUtil.get();
         user.setId((Integer) map.get("id"));
+        user.setUsername((String) map.get("username"));
         userMapper.update(user);
+        return null;
     }
 
     //修改用户头像

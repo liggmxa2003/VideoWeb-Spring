@@ -55,7 +55,7 @@ public class UserController {
                                         @Max(value = 999999, message = "验证码长度必须是6位")
                                         Integer code,
                                         HttpSession sessions) {
-        String s = userService.updatePasswordWhereEmail(email,password,code,sessions.getId());
+        String s = userService.updatePasswordWhereEmail(email, password, code, sessions.getId());
         if (s == null)
             return Result.success();
         else
@@ -72,7 +72,7 @@ public class UserController {
         if (u != null)
             return Result.error(u);
         //生成token
-        String token = userService.userToken(username,password);
+        String token = userService.userToken(username, password);
         return Result.success(token);
     }
 
@@ -80,17 +80,18 @@ public class UserController {
     // 获取用户信息
     @GetMapping("/userInfo")
     public Result<User> userInfo() {
-        Map<String, Object> map = ThreadLocalUtil.get();
-        String username = (String) map.get("username");
         //查询用户
-        User user = userService.findByUsername(username);
+        User user = userService.findByUsername();
         return Result.success(user);
     }
 
     //更新用户信息
     @PutMapping("/updateUser")
-    public Result update(@RequestBody @Validated(User.Update.class) User user) {
-        userService.update(user);
+    public Result<String> update(@RequestBody @Validated(User.Update.class) User user) {
+        String update = userService.update(user);
+        if (update != null) {
+            return Result.error(update);
+        }
         return Result.success();
     }
 
@@ -112,9 +113,7 @@ public class UserController {
             return Result.error("缺少参数");
         }
         //获取用户信息
-        Map<String, Object> map = ThreadLocalUtil.get();
-        String username = (String) map.get("username");
-        User loginUser = userService.findByUsername(username);
+        User loginUser = userService.findByUsername();
         if (!loginUser.getPassword().equals(Md5Util.getMD5String(oldPassword))) {
             return Result.error("原始码错误");
         }

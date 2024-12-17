@@ -4,6 +4,7 @@ package com.ligg.pojo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ligg.anno.Sex;
 import jakarta.validation.constraints.*;
 import jakarta.validation.groups.Default;
 import lombok.AllArgsConstructor;
@@ -17,9 +18,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
-    @NotNull(groups = User.Update.class)
     private Integer id;//主键ID
-    @NotEmpty
     @Pattern(regexp = "[a-z A-Z0-9]{6,16}")
     private String username;//用户名
     @JsonIgnore//忽略
@@ -28,12 +27,16 @@ public class User {
     @NotEmpty(groups = User.Update.class)
     @Pattern(regexp = "^\\S{2,12}$")//2-10位非空字符
     private String nickname;//昵称
+    @Sex(groups = User.Update.class)
+    private Integer sex;//性别
     @Email
     private String email;//邮箱
     @Min(value = 100000,message = "验证码长度必须是6位")
     @Max(value = 999999,message = "验证码长度必须是6位")
     private Integer code;//验证码
     private String userPic;//用户头像地址
+    @Pattern(regexp = "^\\S{5,100}$")//2-10位非空字符
+    private String introduction;//个人简介
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;//创建时间
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

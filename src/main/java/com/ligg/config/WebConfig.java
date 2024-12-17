@@ -5,6 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.util.Arrays;
+import java.util.List;
+
 //Web配置
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
@@ -12,22 +16,30 @@ public class WebConfig implements WebMvcConfigurer {
     @Autowired
     private LoginInterceptors loginInterceptors;
 
-    //拦截器
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(loginInterceptors)
-                //放行路径
-                .excludePathPatterns("/user")
-                .excludePathPatterns("/user/login")
-                .excludePathPatterns("/user/register")
-                .excludePathPatterns("/user/resetPassword")
-                .excludePathPatterns("/email")
-                .excludePathPatterns("/video/**")
-                //拦截路径
-                .addPathPatterns("/user/**")
-                .addPathPatterns("/uploadVideo")
-                .addPathPatterns("/upload");
-    }
+   // 拦截器配置
+@Override
+public void addInterceptors(InterceptorRegistry registry) {
+    // 登录拦截器
+    registry.addInterceptor(loginInterceptors)
+            .order(1) // 设置顺序
+            .excludePathPatterns(getExcludePaths())
+            .addPathPatterns("/user/**", "/uploadVideo", "/upload");
+
+    // 其他拦截器...
+}
+
+// 集中管理放行路径
+private List<String> getExcludePaths() {
+    return Arrays.asList(
+            "/user",
+            "/user/login",
+            "/user/register",
+            "/user/resetPassword",
+            "/email",
+            "/video/**"
+    );
+}
+
     //配置跨域
     /**
      * 添加跨域资源共享(CORS)映射配置
