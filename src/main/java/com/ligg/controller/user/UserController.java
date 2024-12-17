@@ -6,6 +6,7 @@ import com.ligg.service.UserService;
 import com.ligg.utils.JwtUtil;
 import com.ligg.utils.Md5Util;
 import com.ligg.utils.ThreadLocalUtil;
+import com.qiniu.common.QiniuException;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
@@ -87,7 +88,7 @@ public class UserController {
 
     //更新用户信息
     @PutMapping("/updateUser")
-    public Result<String> update(@RequestBody @Validated(User.Update.class) User user) {
+    public Result<String> update(@RequestBody @Validated(User.Update.class) User user) throws QiniuException {
         String update = userService.update(user);
         if (update != null) {
             return Result.error(update);

@@ -4,7 +4,7 @@ import com.github.pagehelper.Page;
 import com.ligg.mapper.user.UserVideoMapper;
 import com.ligg.pojo.PageBean;
 import com.ligg.pojo.Video;
-import com.ligg.service.impl.userimpl.UserVideoServiceImpl;
+import com.ligg.service.impl.user.UserVideoServiceImpl;
 import com.ligg.utils.ThreadLocalUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -4,6 +4,7 @@ import com.ligg.pojo.PageBean;
 import com.ligg.pojo.Result;
 import com.ligg.pojo.Video;
 import com.ligg.service.User.UserVideoService;
+import com.ligg.utils.QiNiuOssUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/user/video")
 public class UserVideoController {
+
 
     @Autowired
     UserVideoService userVideoService;

@@ -16,7 +16,7 @@ public interface UserMapper {
             "values (#{username},#{password},#{email},now(),now())")
     void add(User user);
     // 编辑用户信息
-    @Update("update user set nickname=#{nickname},sex=#{sex},introduction=#{introduction},update_time=NOW() where id=#{id}")
+    @Update("update user set nickname=#{nickname},sex=#{sex},introduction=#{introduction},user_pic=#{userPic},update_time=NOW() where id=#{id}")
     void update(User user);
     // 更新头像
     @Update("update user set user_pic=#{avatarUrl},update_time=NOW() where id=#{id}")

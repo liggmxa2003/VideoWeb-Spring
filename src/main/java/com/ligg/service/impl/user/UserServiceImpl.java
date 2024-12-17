@@ -1,11 +1,13 @@
-package com.ligg.service.impl;
+package com.ligg.service.impl.user;
 
 import com.ligg.mapper.user.UserMapper;
 import com.ligg.pojo.User;
 import com.ligg.service.UserService;
 import com.ligg.utils.JwtUtil;
 import com.ligg.utils.Md5Util;
+import com.ligg.utils.QiNiuOssUtil;
 import com.ligg.utils.ThreadLocalUtil;
+import com.qiniu.common.QiniuException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -18,8 +20,19 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+import static com.ligg.utils.QiNiuOssUtil.parseKeyFromUrl;
+
 @Service
 public class UserServiceImpl implements UserService {
+
+    @Value("${qiniu.access-key}")
+    private String accessKey;
+
+    @Value("${qiniu.secret-key}")
+    private String secretKey;
+
+    @Value("${qiniu.bucket-name}")
+    private String bucketName;
 
     @Autowired
     UserMapper userMapper;
@@ -119,19 +132,30 @@ public class UserServiceImpl implements UserService {
 
     //修改用户信息
     @Override
-    public String update(User user) {
+    public String update(User user) throws QiniuException {
         Map<String, Object> map = ThreadLocalUtil.get();
         user.setId((Integer) map.get("id"));
         user.setUsername((String) map.get("username"));
+
+        User oldAvatarUrl = userMapper.findByUserName(user.getUsername());
+        // 如果新头像和旧头像不一样，就删除旧头像
+        if (!Objects.equals(oldAvatarUrl.getUserPic(), user.getUserPic())) {
+            if (oldAvatarUrl.getUserPic() != null && !oldAvatarUrl.getUserPic().isEmpty()) {
+                String oldAvatarKey = parseKeyFromUrl(oldAvatarUrl.getUserPic());
+                QiNiuOssUtil.deleteFile(oldAvatarKey);
+            }
+        }
         userMapper.update(user);
         return null;
     }
+
 
     //修改用户头像
     @Override
     public void updateAvatar(String avatarUrl) {
         Map<String, Object> map = ThreadLocalUtil.get();
         Integer id = (Integer) map.get("id");
+
         userMapper.updateAvatar(avatarUrl, id);
     }
 

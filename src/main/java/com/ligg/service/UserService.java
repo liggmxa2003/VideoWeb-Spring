@@ -1,6 +1,7 @@
 package com.ligg.service;
 
 import com.ligg.pojo.User;
+import com.qiniu.common.QiniuException;
 
 import java.util.Map;
 
@@ -11,7 +12,7 @@ public interface UserService {
     // 注册用户
     String register(User user,String sessionId);
     // 更新用户信息
-    String update(User user);
+    String update(User user) throws QiniuException;
     // 更新用户头像
     void updateAvatar(String avatarUrl);
     // 重置密码

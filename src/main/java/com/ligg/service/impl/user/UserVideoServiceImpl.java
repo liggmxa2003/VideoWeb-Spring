@@ -1,4 +1,4 @@
-package com.ligg.service.impl.userimpl;
+package com.ligg.service.impl.user;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -8,6 +8,7 @@ import com.ligg.pojo.Video;
 import com.ligg.service.User.UserVideoService;
 import com.ligg.utils.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -17,6 +18,8 @@ import java.util.Objects;
 
 @Service
 public class UserVideoServiceImpl implements UserVideoService {
+
+
 
     @Autowired
     UserVideoMapper userVideoMapper;
