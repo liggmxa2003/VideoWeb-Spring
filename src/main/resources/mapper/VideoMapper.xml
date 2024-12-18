@@ -18,4 +18,5 @@
         join user u on uv.user_id = u.id
         where uv.id = #{id}
     </select>
+
 </mapper>

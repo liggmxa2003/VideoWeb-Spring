@@ -90,15 +90,15 @@ public class UserController {
     @PutMapping("/updateUser")
     public Result<String> update(@RequestBody @Validated(User.Update.class) User user) throws QiniuException {
         String update = userService.update(user);
-        if (update != null) {
-            return Result.error(update);
+        if (update == null) {
+            return Result.success();
         }
-        return Result.success();
+        return Result.error(update);
     }
 
     //更新用户头像
     @PatchMapping("/updateAvatar")
-    public Result updateAvatar(@RequestParam @URL String avatarUrl) {
+    public Result<String> updateAvatar(@RequestParam @URL String avatarUrl) {
         userService.updateAvatar(avatarUrl);
         return Result.success();
     }

@@ -17,7 +17,11 @@
                 <if test="content!=null">
                     content=#{content},
                 </if>
+                <if test="videoUrl!=null">
+                    video_url=#{videoUrl},
+                </if>
                 update_time=now()
+
             </set>
             where id=#{id}
         </update>

@@ -16,29 +16,29 @@ public class WebConfig implements WebMvcConfigurer {
     @Autowired
     private LoginInterceptors loginInterceptors;
 
-   // 拦截器配置
-@Override
-public void addInterceptors(InterceptorRegistry registry) {
-    // 登录拦截器
-    registry.addInterceptor(loginInterceptors)
-            .order(1) // 设置顺序
-            .excludePathPatterns(getExcludePaths())
-            .addPathPatterns("/user/**", "/uploadVideo", "/upload");
+    // 拦截器配置
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        // 登录拦截器
+        registry.addInterceptor(loginInterceptors)
+                .order(1) // 设置顺序
+                .excludePathPatterns(getExcludePaths())
+                .addPathPatterns("/user/**", "/uploadVideo", "/upload","/comments/publish");
 
-    // 其他拦截器...
-}
+        // 其他拦截器...
+    }
 
-// 集中管理放行路径
-private List<String> getExcludePaths() {
-    return Arrays.asList(
-            "/user",
-            "/user/login",
-            "/user/register",
-            "/user/resetPassword",
-            "/email",
-            "/video/**"
-    );
-}
+    // 集中管理放行路径
+    private List<String> getExcludePaths() {
+        return Arrays.asList(
+                "/user",
+                "/user/login",
+                "/user/register",
+                "/user/resetPassword",
+                "/email",
+                "/video/**"
+        );
+    }
 
     //配置跨域
     /**

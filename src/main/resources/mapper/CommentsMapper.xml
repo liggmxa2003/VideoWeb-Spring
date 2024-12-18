@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ligg.mapper.CommentsMapper">
+    <!--查询视频下的所有评论-->
+    <select id="findCommentsByVideoId" resultType="com.ligg.pojo.Comments">
+        select c.content,
+               c.create_time,
+               c.parent_id,
+               c.like_count,
+               u.nickname,u.user_pic
+        from comments c
+                 join user u on c.user_id = u.id
+        where c.video_id = #{id}
+        order by c.create_time desc
+    </select>
+</mapper>
