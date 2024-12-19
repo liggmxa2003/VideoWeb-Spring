@@ -23,7 +23,7 @@ spring:
       # 设置单个文件的最大大小为10MBcdm
       max-file-size: 1000MB
       # 设置整个HTTP请求的最大大小为10MB，适应单文件或多文件上传
-      max-request-size: 100MB
+      max-request-size: 1000MB
 ##开启驼峰命名
 mybatis:
   configuration:

@@ -6,10 +6,12 @@
     <!--查询视频下的所有评论-->
     <select id="findCommentsByVideoId" resultType="com.ligg.pojo.Comments">
         select c.content,
+               c.user_id,
                c.create_time,
                c.parent_id,
                c.like_count,
-               u.nickname,u.user_pic
+               u.nickname,
+               u.user_pic
         from comments c
                  join user u on c.user_id = u.id
         where c.video_id = #{id}
