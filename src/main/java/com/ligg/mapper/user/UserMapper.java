@@ -6,6 +6,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
+import java.util.List;
+
 @Mapper
 public interface UserMapper {
     // 根据用户名查询用户
@@ -31,5 +33,9 @@ public interface UserMapper {
     // 根据邮箱修改密码
     @Update("update user set password=#{password},update_time=now() where email=#{email}")
     void updatePasswordWhereEmail(String password, String email);
-
+    //查询用户列表
+    @Select("select nickname,user_pic from user where id=#{id}")
+    List<User> findByUserId(Integer id);
+    @Select("select nickname,user_pic from user where username=#{username}")
+    List<User> findByUserChat(String username);
 }

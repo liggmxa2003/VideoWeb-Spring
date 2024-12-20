@@ -13,7 +13,7 @@
     </select>
     <!-- 根据id查询视频和用户信息 -->
     <select id="findById" resultType="com.ligg.pojo.Video">
-        select uv.*,u.nickname,u.user_pic
+        select uv.*,u.nickname,u.user_pic,u.introduction,u.username
         from user_video uv
         join user u on uv.user_id = u.id
         where uv.id = #{id}

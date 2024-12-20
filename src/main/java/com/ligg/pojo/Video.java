@@ -24,13 +24,14 @@ public class Video {
     private Integer userId;//用户id
     private String nickname;//用户昵称
     private String userPic;//用户头像
+    private String username;
+    private String introduction;//用户简介
     @NotEmpty
     @Pattern(regexp = "^\\S{2,300}$")
     private String content;//视频介绍
     private String videoUrl;//视频地址
     private LocalDateTime createTime;//发布时间
     private LocalDateTime updateTime;//更新时间
-
     // 分组校验,更新组
     public interface Update extends Default {
 

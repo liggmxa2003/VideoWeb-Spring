@@ -3,6 +3,7 @@ package com.ligg.service;
 import com.ligg.pojo.User;
 import com.qiniu.common.QiniuException;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -25,4 +26,6 @@ public interface UserService {
     String login(String username, String password);
     //token
     String userToken(String username, String password);
+    // 根据用户username获取聊天对象
+    List<User> findByUserChat(String username);
 }

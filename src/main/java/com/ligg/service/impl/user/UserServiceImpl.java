@@ -123,7 +123,14 @@ public class UserServiceImpl implements UserService {
         return token;
     }
 
-   // 修改用户信息
+    //根据用户username获取聊天对象
+    @Override
+    public List<User> findByUserChat(String username) {
+        return userMapper.findByUserChat(username);
+    }
+
+
+    // 修改用户信息
 @Override
 public String update(User user) throws QiniuException {
     Map<String, Object> map = ThreadLocalUtil.get();

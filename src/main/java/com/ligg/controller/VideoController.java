@@ -1,6 +1,7 @@
 package com.ligg.controller;
 
 import com.ligg.pojo.Result;
+import com.ligg.pojo.User;
 import com.ligg.pojo.Video;
 import com.ligg.service.VideoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class VideoController {
     }
     //获取视频详细信息
     @GetMapping("/videoInfo")
-    public Result videoInfo(Integer id){
+    public Result<Video> videoInfo(Integer id){
         Video video = videoService.findById(id);
         return Result.success(video);
     }
