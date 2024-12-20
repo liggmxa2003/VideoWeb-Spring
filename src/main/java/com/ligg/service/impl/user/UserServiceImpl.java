@@ -130,6 +130,16 @@ public class UserServiceImpl implements UserService {
     }
 
 
+    @Override
+    public String findUsername(String username) {
+        Map<String,Object> map = ThreadLocalUtil.get();
+        String u = (String) map.get("username");
+        if (username.equals(u))
+            return "不可以给自己发私信";
+        return null;
+    }
+
+
     // 修改用户信息
 @Override
 public String update(User user) throws QiniuException {

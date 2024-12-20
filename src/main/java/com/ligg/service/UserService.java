@@ -28,4 +28,6 @@ public interface UserService {
     String userToken(String username, String password);
     // 根据用户username获取聊天对象
     List<User> findByUserChat(String username);
+    // 根据账号获取用户名
+    String findUsername(String username);
 }
