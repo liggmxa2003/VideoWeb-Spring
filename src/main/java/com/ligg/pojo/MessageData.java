@@ -11,4 +11,6 @@ public class MessageData {
     private String chatId;
     private String content;
     private String time;
+    private String from;
+    private String to;
 }

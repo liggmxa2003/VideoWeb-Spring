@@ -1,40 +1,42 @@
 package com.ligg.component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.ligg.pojo.ChatMessage;
+import com.ligg.pojo.Message;
+import com.ligg.pojo.MessageData;
+import com.ligg.service.ChatMessageService;
 import jakarta.websocket.*;
 import jakarta.websocket.server.ServerEndpoint;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @ServerEndpoint("/ws/chat")
 @Component
 public class WebSocketServer {
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    // 使用 DateTimeFormatter 处理日期时间
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+    // 配置 ObjectMapper
+    private static final ObjectMapper objectMapper = new ObjectMapper()
+            .registerModule(new JavaTimeModule())
+            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+            .setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+
     private static final Map<String, Session> sessions = new ConcurrentHashMap<>();
+    private static ChatMessageService chatMessageService;
     private String username;
 
-    @OnOpen
-    public void onOpen(Session session) {
-        try {
-            // 从 URL 参数中获取用户名
-            Map<String, String> params = parseQueryString(session.getQueryString());
-            this.username = params.get("username");
-
-            if (this.username == null || this.username.isEmpty()) {
-                throw new IllegalArgumentException("username is required");
-            }
-
-            // 存储会话
-            sessions.put(this.username, session);
-            System.out.println("用户连接成功: " + this.username);
-        } catch (Exception e) {
-            System.err.println("连接失败: " + e.getMessage());
-            try {
-                session.close();
-            } catch (Exception ignored) {}
-        }
+    @Autowired
+    public void setChatMessageService(ChatMessageService service) {
+        WebSocketServer.chatMessageService = service;
     }
 
     @OnMessage
@@ -45,41 +47,109 @@ public class WebSocketServer {
                 return;
             }
 
-            // 解析消息
             Message message = objectMapper.readValue(messageStr, Message.class);
 
             if ("chat".equals(message.getType()) && message.getData() != null) {
                 String to = message.getData().getTo();
-
-                // 检查接收者是否存在
                 if (to == null || to.isEmpty()) {
                     System.err.println("接收者不能为空");
                     return;
                 }
 
-                // 构建响应消息
-                Message responseMessage = new Message();
-                responseMessage.setType("chat");
+                // 创建消息对象
+                ChatMessage chatMessage = createChatMessage(message);
 
-                MessageData responseData = new MessageData();
-                responseData.setFrom(this.username);
-                responseData.setContent(message.getData().getContent());
-                responseData.setTime(message.getData().getTime());
-                responseMessage.setData(responseData);
+                // 保存消息到数据库
+                chatMessageService.saveMessage(chatMessage);
 
                 // 发送消息给接收者
-                Session receiverSession = sessions.get(to);
-                if (receiverSession != null && receiverSession.isOpen()) {
-                    String responseStr = objectMapper.writeValueAsString(responseMessage);
-                    receiverSession.getBasicRemote().sendText(responseStr);
-                    System.out.println("消息发送成功: " + responseStr);
-                } else {
-                    System.out.println("接收者不在线: " + to);
-                }
+                Message responseMessage = buildResponseMessage(chatMessage);
+                sendMessageToUser(to, responseMessage);
             }
         } catch (Exception e) {
             System.err.println("处理消息失败: " + e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * 创建聊天消息对象
+     */
+    private ChatMessage createChatMessage(Message message) {
+        ChatMessage chatMessage = new ChatMessage();
+        chatMessage.setFromUser(this.username);
+        chatMessage.setToUser(message.getData().getTo());
+        chatMessage.setContent(message.getData().getContent());
+
+        // 处理发送时间
+        LocalDateTime sendTime;
+        try {
+            String timeStr = message.getData().getTime();
+            sendTime = timeStr != null && !timeStr.isEmpty() ?
+                    LocalDateTime.parse(timeStr, DATE_FORMATTER) :
+                    LocalDateTime.now();
+        } catch (Exception e) {
+            // 如果时间解析失败，使用当前时间
+            sendTime = LocalDateTime.now();
+            System.err.println("时间解析失败，使用当前时间: " + e.getMessage());
+        }
+        chatMessage.setSendTime(sendTime);
+
+        return chatMessage;
+    }
+
+    /**
+     * 构建响应消息
+     */
+    private Message buildResponseMessage(ChatMessage chatMessage) {
+        Message responseMessage = new Message();
+        responseMessage.setType("chat");
+
+        MessageData responseData = new MessageData();
+        responseData.setFrom(chatMessage.getFromUser());
+        responseData.setContent(chatMessage.getContent());
+        // 格式化时间为字符串
+        responseData.setTime(chatMessage.getSendTime().format(DATE_FORMATTER));
+        responseMessage.setData(responseData);
+
+        return responseMessage;
+    }
+
+    /**
+     * 发送消息给指定用户
+     */
+    private void sendMessageToUser(String toUser, Message message) {
+        try {
+            Session receiverSession = sessions.get(toUser);
+            if (receiverSession != null && receiverSession.isOpen()) {
+                String messageStr = objectMapper.writeValueAsString(message);
+                receiverSession.getBasicRemote().sendText(messageStr);
+                System.out.println("消息发送成功: " + messageStr);
+            } else {
+                System.out.println("接收者不在线: " + toUser);
+            }
+        } catch (Exception e) {
+            System.err.println("发送消息失败: " + e.getMessage());
+        }
+    }
+
+    @OnOpen
+    public void onOpen(Session session) {
+        try {
+            Map<String, String> params = parseQueryString(session.getQueryString());
+            this.username = params.get("username");
+
+            if (this.username == null || this.username.isEmpty()) {
+                throw new IllegalArgumentException("username is required");
+            }
+
+            sessions.put(this.username, session);
+            System.out.println("用户连接成功: " + this.username);
+        } catch (Exception e) {
+            System.err.println("连接失败: " + e.getMessage());
+            try {
+                session.close();
+            } catch (Exception ignored) {}
         }
     }
 
@@ -108,32 +178,4 @@ public class WebSocketServer {
         }
         return params;
     }
-}
-
-// 消息类
-class Message {
-    private String type;
-    private MessageData data;
-
-    public String getType() { return type; }
-    public void setType(String type) { this.type = type; }
-    public MessageData getData() { return data; }
-    public void setData(MessageData data) { this.data = data; }
-}
-
-// 消息数据类
-class MessageData {
-    private String from;
-    private String to;
-    private String content;
-    private String time;
-
-    public String getFrom() { return from; }
-    public void setFrom(String from) { this.from = from; }
-    public String getTo() { return to; }
-    public void setTo(String to) { this.to = to; }
-    public String getContent() { return content; }
-    public void setContent(String content) { this.content = content; }
-    public String getTime() { return time; }
-    public void setTime(String time) { this.time = time; }
 }
