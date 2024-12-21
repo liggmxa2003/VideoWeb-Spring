@@ -9,7 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MessageData {
     private String chatId;
+    private String username;
     private String content;
+    private Boolean online;
     private String time;
     private String from;
     private String to;

@@ -1,5 +1,6 @@
 package com.ligg.controller;
 
+import com.ligg.component.WebSocketServer;
 import com.ligg.pojo.ChatMessage;
 import com.ligg.pojo.Result;
 import com.ligg.pojo.User;
@@ -9,7 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -70,5 +73,17 @@ public class ChatController {
             @RequestParam String toUser) {
         chatMessageService.markAsRead(fromUser, toUser);
         return Result.success();
+    }
+
+    /**
+     * 获取用户在线状态
+     */
+    @GetMapping("/online-status")
+    public Result<Map<String, Boolean>> getOnlineStatus(@RequestParam List<String> usernames) {
+        Map<String, Boolean> statusMap = new HashMap<>();
+        for (String username : usernames) {
+            statusMap.put(username, WebSocketServer.isUserOnline(username));
+        }
+        return Result.success(statusMap);
     }
 }

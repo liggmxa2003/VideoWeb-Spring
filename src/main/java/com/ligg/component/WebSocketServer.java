@@ -37,6 +37,8 @@ public class WebSocketServer {
     private static final Map<String, Session> sessions = new ConcurrentHashMap<>();
     private static ChatMessageService chatMessageService;
     private static OfflineMessageServiceImpl offlineMessageService;
+    // 存储用户在线状态
+    private static final Map<String, Boolean> onlineStatus = new ConcurrentHashMap<>();
     private String username;
 
     @Autowired
@@ -63,7 +65,11 @@ public class WebSocketServer {
             }
 
             sessions.put(this.username, session);
+            onlineStatus.put(this.username, true); // 设置用户在线
             log.info("用户连接成功: {}", this.username);
+
+            // 广播用户上线状态
+            broadcastUserStatus(this.username, true);
 
             // 检查并发送离线消息
             sendOfflineMessages();
@@ -131,6 +137,10 @@ public class WebSocketServer {
     public void onClose(Session session) {
         if (this.username != null) {
             sessions.remove(this.username);
+            onlineStatus.put(this.username, false); // 设置用户离线
+
+            // 广播用户离线状态
+            broadcastUserStatus(this.username, false);
             System.out.println("用户断开连接: " + this.username);
         }
     }
@@ -235,5 +245,34 @@ public class WebSocketServer {
         } catch (Exception e) {
             log.error("发送离线消息失败: {}", e.getMessage());
         }
+    }
+
+    /**
+     * 广播用户状态变化
+     */
+    private void broadcastUserStatus(String username, boolean isOnline) {
+        Message statusMessage = new Message();
+        statusMessage.setType("status");
+
+        MessageData data = new MessageData();
+        data.setUsername(username);
+        data.setOnline(isOnline);
+        statusMessage.setData(data);
+
+        // 广播给所有在线用户
+        sessions.values().forEach(session -> {
+            try {
+                session.getBasicRemote().sendText(objectMapper.writeValueAsString(statusMessage));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    /**
+     * 检查用户是否在线
+     */
+    public static boolean isUserOnline(String username) {
+        return onlineStatus.getOrDefault(username, false);
     }
 }
