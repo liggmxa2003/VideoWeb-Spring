@@ -6,7 +6,7 @@
     <!-- 查询所有视频 -->
     <select id="list" resultType="com.ligg.pojo.Video">
         select uv.*, u.nickname
-        from user_video uv
+        from video uv
                  join user u on uv.user_id = u.id
         order by uv.update_time desc
         limit 100
@@ -14,7 +14,7 @@
     <!-- 根据id查询视频和用户信息 -->
     <select id="findById" resultType="com.ligg.pojo.Video">
         select uv.*,u.nickname,u.user_pic,u.introduction,u.username
-        from user_video uv
+        from video uv
         join user u on uv.user_id = u.id
         where uv.id = #{id}
     </select>

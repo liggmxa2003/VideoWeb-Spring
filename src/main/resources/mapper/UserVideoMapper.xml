@@ -6,7 +6,7 @@
     <!--编辑用户视频信息-->
 
     <update id="update">
-            update user_video
+            update video
             <set>
                 <if test="title!=null">
                     title=#{title},

@@ -9,6 +9,6 @@ import java.util.List;
 @Mapper
 public interface SearchMapper {
     // 根据标题和简介搜索
-    @Select("select * from user_video where title like concat('%',#{keyword},'%') or content like concat('%',#{keyword},'%')")
+    @Select("select * from video where title like concat('%',#{keyword},'%') or content like concat('%',#{keyword},'%')")
     List<Video> search(String keyword);
 }
