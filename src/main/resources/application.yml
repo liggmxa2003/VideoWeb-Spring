@@ -38,6 +38,6 @@ logging:
 qiniu:
   access-key: 0G5LPij1PyBXrrcZg9YoDAbqjdSzMQT15Vv6d-9G
   secret-key: XQz2Uhqp_AxbIZiMuW8Xof8fJml39vgIRxfcnkXq
-  bucket-name: uploadlwz
-  domain: http://sncodwj9m.hn-bkt.clouddn.com #https://portal.qiniu.com/
+  bucket-name: liggvideo
+  domain: http://sow7xzh7y.sabkt.gdipper.com #域名
   video-path: videos/ # 新增的视频文件存储路径或前缀
