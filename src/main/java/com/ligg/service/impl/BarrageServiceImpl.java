@@ -7,6 +7,7 @@ import com.ligg.utils.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -22,5 +23,10 @@ public class BarrageServiceImpl implements BarrageService {
         barrage.setUserId((Integer) map.get("id"));
         barrageMapper.sendBarrage(barrage);
         return null;
+    }
+    // 获取弹幕
+    @Override
+    public List<Barrage> getBarrage(Integer videoId) {
+        return barrageMapper.getBarrage(videoId);
     }
 }
