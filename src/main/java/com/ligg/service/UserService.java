@@ -30,4 +30,6 @@ public interface UserService {
     List<User> findByUserChat(String username);
     // 根据账号获取用户名
     String findUsername(String username);
+    // 删除token
+    void deleteToken();
 }

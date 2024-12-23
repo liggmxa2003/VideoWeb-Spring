@@ -103,7 +103,14 @@ public class UserController {
         return Result.success();
     }
 
-    //修改密码
+    //退出登录
+    @DeleteMapping("/logout")
+    public Result logout() {
+        //删除token
+        userService.deleteToken();
+        return Result.success();
+    }
+   /* //修改密码
     @PatchMapping("/updatePassword")
     public Result<String> updatePassword(@RequestBody Map<String, String> params, @RequestHeader("Authorization") String token) {
         //参数校验
@@ -134,7 +141,7 @@ public class UserController {
         ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
         operations.getOperations().delete(token);
         return Result.success();
-    }
+    }*/
 
 
 }

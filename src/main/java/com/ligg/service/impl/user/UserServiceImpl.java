@@ -8,6 +8,7 @@ import com.ligg.utils.Md5Util;
 import com.ligg.utils.QiNiuOssUtil;
 import com.ligg.utils.ThreadLocalUtil;
 import com.qiniu.common.QiniuException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -22,6 +23,7 @@ import java.util.concurrent.TimeUnit;
 
 import static com.ligg.utils.QiNiuOssUtil.parseKeyFromUrl;
 
+@Slf4j
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -138,6 +140,33 @@ public class UserServiceImpl implements UserService {
             return "不可以给自己发私信";
         return null;
     }
+    //删除token
+   @Override
+public void deleteToken() {
+    // 获取 ThreadLocal 中的用户信息
+    Map<String, Object> map = ThreadLocalUtil.get();
+    if (map == null || !map.containsKey("username")) {
+        log.warn("User information not found in ThreadLocal");
+        return;
+    }
+
+    String username = (String) map.get("username");
+
+    try {
+        // 从 Redis 中获取用户的旧 token
+        String oldToken = stringRedisTemplate.opsForValue().get(username);
+        if (oldToken != null) {
+            // 删除 Redis 中的 token
+            stringRedisTemplate.delete(oldToken);
+            log.info("Deleted token for user: {}", username);
+        } else {
+            log.warn("No token found for user: {}", username);
+        }
+    } catch (Exception e) {
+        log.error("Error deleting token for user: {}", username, e);
+    }
+}
+
 
 
     // 修改用户信息
@@ -230,7 +259,7 @@ public String update(User user) throws QiniuException {
             return null;
         } catch (MailException e) {
             e.printStackTrace();
-            return "验证码获取失败，请检查游戏是否正确";
+            return "验证码获取失败，请检查邮箱是否正确";
         }
     }
 

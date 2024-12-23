@@ -45,6 +45,7 @@ public class WebSocketServer {
     public void setChatMessageService(ChatMessageService service) {
         WebSocketServer.chatMessageService = service;
     }
+
     @Autowired
     public void setOfflineMessageService(OfflineMessageServiceImpl service) {
         WebSocketServer.offlineMessageService = service;
@@ -144,6 +145,7 @@ public class WebSocketServer {
             System.out.println("用户断开连接: " + this.username);
         }
     }
+
     /**
      * 创建聊天消息对象
      */
@@ -228,6 +230,7 @@ public class WebSocketServer {
         }
         return params;
     }
+
     /**
      * 发送离线消息
      */
@@ -262,9 +265,15 @@ public class WebSocketServer {
         // 广播给所有在线用户
         sessions.values().forEach(session -> {
             try {
-                session.getBasicRemote().sendText(objectMapper.writeValueAsString(statusMessage));
+                if (session.isOpen()) {
+                    session.getAsyncRemote().sendText(objectMapper.writeValueAsString(statusMessage), result -> {
+                        if (result.getException() != null) {
+                            log.error("Failed to send message to user {}: {}", username, result.getException().getMessage());
+                        }
+                    });
+                }
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("Error broadcasting user status: {}", e.getMessage());
             }
         });
     }
