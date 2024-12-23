@@ -36,7 +36,8 @@ public class WebConfig implements WebMvcConfigurer {
                 "/user/register",
                 "/user/resetPassword",
                 "/email",
-                "/video/**"
+                "/video/**",
+                "/user/barrage/get"
         );
     }
 

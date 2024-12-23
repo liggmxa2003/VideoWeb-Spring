@@ -16,12 +16,12 @@ public class BarrageController {
     BarrageService barrageService;
 
     //发送弹幕
-    @PostMapping
+    @PostMapping("/send")
     public Result<String> sendBarrage(@RequestBody Barrage barrage) {
         return Result.success(barrageService.sendBarrage(barrage));
     }
     //获取弹幕
-    @GetMapping
+    @GetMapping("/get")
     public Result<List<Barrage>> getBarrage(@RequestParam Integer videoId) {
         return Result.success(barrageService.getBarrage(videoId));
     }
