@@ -45,4 +45,4 @@ qiniu:
 bangumi:
   client-id: bgm34586768ae15029bd
   clinet-secret: 91c137068032226c437c3b4590e3a0dd
-  redirect-uri: http://127.0.0.1:5500
+  redirect-uri: http://127.0.0.1:5501

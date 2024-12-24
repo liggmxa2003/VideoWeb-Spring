@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ligg.mapper.SearchMapper">
+
+<!--搜索-->
+<select id="search" resultType="com.ligg.pojo.Video">
+    SELECT
+        v.id,
+        v.title,
+        v.video_url,
+        v.content,
+        v.cover,
+        v.create_time,
+        u.id,
+        u.username,
+        u.user_pic
+    FROM
+        video v
+    JOIN
+        user u ON v.user_id = u.id
+    WHERE
+        v.title LIKE CONCAT('%', #{keyword}, '%')
+</select>
+
+
+</mapper>
