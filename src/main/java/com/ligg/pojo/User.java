@@ -28,6 +28,7 @@ public class User {
     private String nickname;//昵称
     @Sex(groups = User.Update.class)
     private Integer sex;//性别
+    private String role;//角色
     @Email
     private String email;//邮箱
     @Min(value = 100000,message = "验证码长度必须是6位")
