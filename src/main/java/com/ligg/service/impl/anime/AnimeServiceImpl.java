@@ -9,6 +9,7 @@ import com.ligg.utils.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -30,5 +31,11 @@ public class AnimeServiceImpl implements AnimeService {
             return "用户没有权限发布动漫";
         animeMapper.publishAnime(anime);
         return null;
+    }
+
+    @Override
+    public List<Anime> Carousel() {
+        Integer recommend = 1;
+        return animeMapper.Carousel(recommend);
     }
 }

@@ -14,6 +14,6 @@ public interface BarrageMapper {
             " values(#{videoId},#{userId},#{content},#{color},#{timePoint},NOW())")
     void sendBarrage(Barrage barrage);
     // 获取弹幕
-    @Select("select id,user_id,video_id,content,color,time_point from barrage where video_id=#{videoId}")
+    @Select("select id,user_id,video_id,content,color,time_point,create_time from barrage where video_id=#{videoId}")
     List<Barrage> getBarrage(Integer videoId);
 }

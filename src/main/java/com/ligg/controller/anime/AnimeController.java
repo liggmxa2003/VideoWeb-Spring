@@ -4,10 +4,9 @@ import com.ligg.pojo.Anime;
 import com.ligg.pojo.Result;
 import com.ligg.service.AnimeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/anime")
@@ -22,5 +21,12 @@ public class AnimeController {
         if (a != null)
             return Result.error(a);
         return Result.success();
+    }
+
+    //anime轮播图
+    @GetMapping("/Carousel")
+    public Result<List<Anime>> Carousel() {
+        List<Anime> anime = animeService.Carousel();
+        return Result.success(anime);
     }
 }
