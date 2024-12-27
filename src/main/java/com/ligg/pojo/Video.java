@@ -27,7 +27,6 @@ public class Video {
     private String username;
     private String introduction;//用户简介
     @NotEmpty
-    @Pattern(regexp = "^\\S{2,300}$")
     private String content;//视频介绍
     private String videoUrl;//视频地址
     private LocalDateTime createTime;//发布时间
