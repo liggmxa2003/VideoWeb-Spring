@@ -36,8 +36,8 @@ logging:
     com.ligg.mapper: debug
 # 七牛云配置
 qiniu:
-  access-key: 0G5LPij1PyBXrrcZg9YoDAbqjdSzMQT15Vv6d-9G
-  secret-key: XQz2Uhqp_AxbIZiMuW8Xof8fJml39vgIRxfcnkXq
+  access-key: t5C9G5fTBUfkenBBCKeQI2W4B00mDP6SL1-7WqQW
+  secret-key: rNVfHfI4l_LHkpRSWdMIdcXoIXhuQVq-9xgNhqZX
   bucket-name: videoplusligg
   domain: http://sowl9rtuo.hn-bkt.clouddn.com/ #域名
   video-path: videos/ # 新增的视频文件存储路径或前缀
