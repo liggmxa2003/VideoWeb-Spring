@@ -43,6 +43,11 @@ public class UserServiceImpl implements UserService {
         String username = (String) map.get("username");
         return userMapper.findByUserName(username);
     }
+    //根据用户名查询用户信息
+    @Override
+    public User findUseInfo(User user) {
+        return userMapper.findByUserName(user.getUsername());
+    }
 
     //注册用户
     @Override

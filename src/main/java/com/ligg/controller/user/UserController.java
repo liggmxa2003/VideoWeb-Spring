@@ -41,9 +41,11 @@ public class UserController {
     @PostMapping("/register")
     public Result<String> register(@Validated(User.Add.class) User user, HttpSession sessions) {
         String s = userService.register(user, sessions.getId());
-        if (s == null)
-            return Result.success();
-        else
+        if (s == null) {
+            User u = userService.findUseInfo(user);
+            String userToken = userService.userToken(u.getUsername(), u.getPassword());
+            return Result.success(userToken);
+        }
             return Result.error(s);
     }
 

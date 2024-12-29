@@ -10,6 +10,7 @@ import java.util.Map;
 public interface UserService {
     // 根据用户名查询用户
     User findByUsername();
+    User findUseInfo(User user);
     // 注册用户
     String register(User user,String sessionId);
     // 更新用户信息

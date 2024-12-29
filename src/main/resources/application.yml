@@ -8,7 +8,7 @@ spring:
   mail:
     host: smtp.163.com
     username: 19971481405@163.com
-    password: WH8VTGgnSg5hkEZV
+    password: HWiRuiXfCauPMHHN
     port: 25
   data:
     ##Redis非关系形数据库配置
