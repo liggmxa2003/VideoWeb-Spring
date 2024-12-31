@@ -3,17 +3,22 @@ package com.ligg.controller.file;
 import com.ligg.pojo.Result;
 import com.ligg.service.FileUploadService;
 import com.ligg.utils.QiNiuOssUtil;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -23,20 +28,63 @@ public class FileUploadController {
     @Autowired
     FileUploadService fileUploadService;
 
+    // 文件上传存储的根目录
+    private static final String UPLOAD_DIR = "uploads";
     // 视频文件上传接口
     @PostMapping("/uploadVideo")
-    public ResponseEntity<Result<String>> handleVideoUpload(@RequestParam("video") MultipartFile video){
-            String videoUrl = fileUploadService.uploadVideo(video);
-            // 返回统一的响应结果，视频Url地址
-            return ResponseEntity.ok(Result.success(videoUrl));
+    public Result<String> handleVideoUpload(@RequestParam("video") MultipartFile video) {
+        String videoUrl = fileUploadService.uploadVideo(video);
+        // 返回统一的响应结果，视频Url地址
+        return Result.success(videoUrl);
     }
 
     //图片上传接口
     @PostMapping("/uploadImage")
-    public ResponseEntity<Result<String>> handleImageUpload(@RequestParam("image") MultipartFile file) {
+    public Result<String> handleImageUpload(@RequestParam("image") MultipartFile file) {
         String imageUrl = fileUploadService.uploadImage(file);
         // 返回统一的响应结果
-        return ResponseEntity.ok(Result.success(imageUrl));
+        return Result.success(imageUrl);
 
+    }
+
+    /**
+     * 上传文件切片
+     *
+     * @param file        切片文件
+     * @param chunkIndex  当前切片索引
+     * @param totalChunks 总切片数
+     * @param fileId      文件唯一标识
+     * @return 上传结果
+     */
+    @PostMapping("/chunk")
+    public Result<String> uploadChunk(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("chunkIndex") int chunkIndex,
+            @RequestParam("totalChunks") int totalChunks,
+            @RequestParam("fileId") String fileId) {
+        try {
+            fileUploadService.saveChunk(file, fileId, chunkIndex);
+            return Result.success();
+        } catch (IOException e) {
+            return Result.error("Error saving chunk: " + e.getMessage());
+        }
+    }
+
+    /**
+     * 合并文件切片
+     * @param requestParams 请求参数
+     * @return
+     */
+    @PostMapping("/merge")
+    public Result<String> mergeChunks(@RequestBody Map<String, Object>requestParams) {
+        String fileId = (String) requestParams.get("fileId");
+        String fileName = (String) requestParams.get("fileName");
+        int totalChunks = (int) requestParams.get("totalChunks");
+        try {
+            String fileUrl = fileUploadService.mergeChunks(fileId, fileName, totalChunks);
+            return Result.success(fileUrl);
+        } catch (IOException e) {
+            return Result.error("Error merging chunks: " + e.getMessage());
+        }
     }
 }

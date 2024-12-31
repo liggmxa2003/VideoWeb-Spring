@@ -43,10 +43,11 @@ public class UserController {
         String s = userService.register(user, sessions.getId());
         if (s == null) {
             User u = userService.findUseInfo(user);
+            //生成token
             String userToken = userService.userToken(u.getUsername(), u.getPassword());
             return Result.success(userToken);
         }
-            return Result.error(s);
+        return Result.error(s);
     }
 
     //重置密码

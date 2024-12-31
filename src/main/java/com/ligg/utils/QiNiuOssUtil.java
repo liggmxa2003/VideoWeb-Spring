@@ -7,9 +7,11 @@ import com.qiniu.storage.Configuration;
 import com.qiniu.storage.Region;
 import com.qiniu.storage.UploadManager;
 import com.qiniu.util.Auth;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.InputStream;
 
+@Slf4j
 // 七牛云oss存储工具类
 public class QiNiuOssUtil {
     // 七牛云存储的 Access Key 和 Secret Key
@@ -58,22 +60,6 @@ public class QiNiuOssUtil {
         // 假设 URL 格式为 http://yourdomain.com/your-bucket-name/key
         String[] parts = url.split("/");
         return parts[parts.length - 1]; // 返回最后一个部分作为 Key
-    }
-    /**
-     * 上传文件到七牛云
-     *
-     * @param filePath 文件路径
-     * @return 上传结果
-     * @throws QiniuException 异常处理
-     */
-    public static String uploadFile(String filePath) throws QiniuException {
-        try {
-            Response response = uploadManager.put(filePath, null, getUpToken());
-            // 解析上传成功的结果
-            return response.bodyString();
-        } catch (QiniuException ex) {
-            throw ex;
-        }
     }
 
     /**
@@ -124,18 +110,9 @@ public class QiNiuOssUtil {
                 System.out.println("文件删除失败: " + response.bodyString());
             }
         } catch (QiniuException ex) {
+            log.error("删除文件失败: " + ex.getMessage());
             throw ex;
         }
     }
-    /*public static void deleteFile(String key) {
-        Auth auth = Auth.create(ACCESS_KEY, SECRET_KEY);
-        com.qiniu.storage.BucketManager bucketManager = new com.qiniu.storage.BucketManager(auth, new Configuration());
-        try {
-            bucketManager.delete(BUCKET_NAME, key);
-        } catch (QiniuException ex) {
-            // 如果遇到异常，说明删除失败
-            System.err.println(ex.code());
-            System.err.println(ex.response.toString());
-        }
-    }*/
+
 }

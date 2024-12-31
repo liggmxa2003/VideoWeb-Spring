@@ -53,7 +53,6 @@ public class WebSocketServer {
 
     /**
      * 用户连接
-     * @param session
      */
     @OnOpen
     public void onOpen(Session session) {
@@ -84,8 +83,7 @@ public class WebSocketServer {
 
     /**
      * 接收消息
-     * @param messageStr
-     * @param session
+     * @param messageStr 接收到的消息
      */
     @OnMessage
     public void onMessage(String messageStr, Session session) {
