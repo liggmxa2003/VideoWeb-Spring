@@ -23,7 +23,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(loginInterceptors)
                 .order(1) // 设置顺序
                 .excludePathPatterns(getExcludePaths())
-                .addPathPatterns("/user/**", "/uploadVideo", "/upload","/comments/publish","/anime");
+                .addPathPatterns("/user/**", "/uploadVideo", "/upload","/comments/publish","/anime/**");
 
         // 其他拦截器...
     }
