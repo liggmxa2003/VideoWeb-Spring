@@ -5,7 +5,6 @@ import com.ligg.pojo.Episode;
 import com.ligg.pojo.PageBean;
 import com.ligg.pojo.Result;
 import com.ligg.service.AnimeService;
-import com.mysql.cj.log.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
