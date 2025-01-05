@@ -2,24 +2,11 @@ package com.ligg.controller.file;
 
 import com.ligg.pojo.Result;
 import com.ligg.service.FileUploadService;
-import com.ligg.utils.QiNiuOssUtil;
-import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Map;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/file")
