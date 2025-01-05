@@ -15,6 +15,8 @@ public interface AnimeService {
     String publishEpisode(Episode episode);
     //查询动漫集
     List<Episode> episode(Long animeId);
-    //动漫列表
+    //番剧列表
     PageBean<Anime> list(Integer pageNum, Integer pageSize);
+    //编辑番剧
+    void update(Anime anime);
 }

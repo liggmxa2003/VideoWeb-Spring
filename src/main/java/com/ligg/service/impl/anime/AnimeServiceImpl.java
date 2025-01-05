@@ -73,4 +73,9 @@ public class AnimeServiceImpl implements AnimeService {
         anime.setTotal(p.getTotal());
         return anime;
     }
+
+    @Override
+    public void update(Anime anime) {
+        animeMapper.update(anime);
+    }
 }

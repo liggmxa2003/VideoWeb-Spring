@@ -5,6 +5,7 @@ import com.ligg.pojo.Episode;
 import com.ligg.pojo.PageBean;
 import com.ligg.pojo.Result;
 import com.ligg.service.AnimeService;
+import com.mysql.cj.log.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +33,12 @@ public class AnimeController {
     ) {
         PageBean<Anime> anime = animeService.list(pageNum,pageSize);
         return Result.success(anime);
+    }
+    //番剧编辑
+    @PutMapping
+    public Result<String> update(@RequestBody Anime anime){
+        animeService.update(anime);
+        return Result.success();
     }
 
     //发布动漫集数

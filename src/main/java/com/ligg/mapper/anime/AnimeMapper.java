@@ -5,6 +5,7 @@ import com.ligg.pojo.Episode;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -20,8 +21,12 @@ public interface AnimeMapper {
             "values(#{animeId},#{title},#{airDate},#{duration},#{episodeNumber},#{animeUrl})")
     void publishEpisode(Episode episode);
     //获取动漫的章节
-    List<Episode> episode(Long animeId);
+    List<Episode> episode(Long animeId); 
     //获取动漫列表
     @Select("select * from anime order by anime_id desc")
     List<Anime> list();
+    //更新番剧信息
+    @Update("update anime set title=#{title},cover_image=#{coverImage},status=#{status},description=#{description},updated_at=NOW() " +
+            "where anime_id=#{animeId}")
+    void update(Anime anime);
 }

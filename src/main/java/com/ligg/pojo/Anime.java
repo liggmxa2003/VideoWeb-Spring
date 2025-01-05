@@ -11,7 +11,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Anime {
-    private Long id;
+    private Long animeId;
     private String title;//标题
     private String description;//描述
     private String coverImage;//封面图片
