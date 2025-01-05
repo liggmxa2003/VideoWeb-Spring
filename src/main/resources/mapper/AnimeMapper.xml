@@ -6,15 +6,16 @@
 
     <!--发布动漫-->
     <insert id="publishAnime" parameterType="com.ligg.pojo.Anime">
-        insert into anime(title,description,cover_image,release_date,status,created_at,updated_at)
-        values (#{title},#{description},#{coverImage},#{releaseDate},#{status},now(),now())
+        insert into anime(title, description, cover_image, release_date, status, created_at, updated_at)
+        values (#{title}, #{description}, #{coverImage}, #{releaseDate}, #{status}, now(), now())
     </insert>
     <!--获取动漫集数-->
-    <select id="episode">
+    <update id="episode">
         select e.episode_number
         from anime a
-        left join
-            anime_episode e on e.anime_id = a.anime_id
+                 left join
+             anime_episode e on e.anime_id = a.anime_id
         where a.anime_id = #{animeId}
-    </select>
+    </update>
+
 </mapper>
