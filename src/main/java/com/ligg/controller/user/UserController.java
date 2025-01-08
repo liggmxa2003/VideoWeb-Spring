@@ -3,9 +3,6 @@ package com.ligg.controller.user;
 import com.ligg.pojo.Result;
 import com.ligg.pojo.User;
 import com.ligg.service.UserService;
-import com.ligg.utils.JwtUtil;
-import com.ligg.utils.Md5Util;
-import com.ligg.utils.ThreadLocalUtil;
 import com.qiniu.common.QiniuException;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.constraints.Email;
@@ -15,14 +12,8 @@ import jakarta.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 
 //用户接口
@@ -108,7 +99,7 @@ public class UserController {
 
     //退出登录
     @DeleteMapping("/logout")
-    public Result logout() {
+    public Result<String> logout() {
         //删除token
         userService.deleteToken();
         return Result.success();

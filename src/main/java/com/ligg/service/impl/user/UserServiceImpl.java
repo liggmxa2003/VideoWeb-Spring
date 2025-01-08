@@ -59,10 +59,10 @@ public class UserServiceImpl implements UserService {
         String key = "email" + sessionId + ":" + user.getEmail() + ":false";
         if (Boolean.TRUE.equals(stringRedisTemplate.hasKey(key))) {
             String s = stringRedisTemplate.opsForValue().get(key);//获取Redis中的验证码
-            /**
-             * 注意： user.getCode() 返回的是一个 Integer 类型的对象，而 s 是一个 String 类型。
-             * Integer 和 String 之间不能直接进行 equals 比较。
-             * 需要将将 user.getCode() 转换为 String 类型，然后再进行比较
+            /*
+              注意： user.getCode() 返回的是一个 Integer 类型的对象，而 s 是一个 String 类型。
+              Integer 和 String 之间不能直接进行 equals 比较。
+              需要将将 user.getCode() 转换为 String 类型，然后再进行比较
              */
             //较验证码
             if (/*user.getCode().equals(s)*/String.valueOf(user.getCode()).equals(s)) {
@@ -269,7 +269,7 @@ public class UserServiceImpl implements UserService {
             stringRedisTemplate.opsForValue().set(key, String.valueOf(code), 3, TimeUnit.MINUTES);
             return null;
         } catch (MailException e) {
-            e.printStackTrace();
+            log.error("验证码发送失败，邮箱: {}, 错误信息: {}", email, e.getMessage(), e);
             return "验证码获取失败，请检查邮箱是否正确";
         }
     }
