@@ -34,9 +34,9 @@ public class AnimeController {
         return Result.success(anime);
     }
     //番剧编辑
-    @PutMapping
-    public Result<String> update(@RequestBody Anime anime){
-        animeService.update(anime);
+    @PutMapping("/{animeId}")
+    public Result<String> update(@PathVariable("animeId")Long animeId, @RequestBody Anime anime){
+        animeService.update(animeId,anime);
         return Result.success();
     }
 

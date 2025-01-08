@@ -18,5 +18,5 @@ public interface AnimeService {
     //番剧列表
     PageBean<Anime> list(Integer pageNum, Integer pageSize);
     //编辑番剧
-    void update(Anime anime);
+    void update(Long AnimeId,Anime anime);
 }

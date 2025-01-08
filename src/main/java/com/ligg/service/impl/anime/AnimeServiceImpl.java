@@ -75,7 +75,8 @@ public class AnimeServiceImpl implements AnimeService {
     }
 
     @Override
-    public void update(Anime anime) {
+    public void update(Long AnimeId,Anime anime) {
+        anime.setAnimeId(AnimeId);
         animeMapper.update(anime);
     }
 }
