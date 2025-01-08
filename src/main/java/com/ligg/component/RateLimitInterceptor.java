@@ -1,26 +1,37 @@
 package com.ligg.component;
 
-import com.google.common.util.concurrent.RateLimiter;
+import io.github.resilience4j.ratelimiter.RateLimiter;
+import io.github.resilience4j.ratelimiter.RateLimiterConfig;
+import io.github.resilience4j.ratelimiter.RateLimiterRegistry;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import java.time.Duration;
+// 限流拦截器
 @Component
 public class RateLimitInterceptor implements HandlerInterceptor {
 
-    //每秒允许访问的次数
-    private RateLimiter rateLimiter = RateLimiter.create(5.0);
+    private final RateLimiter rateLimiter;
+
+    public RateLimitInterceptor() {
+        RateLimiterConfig config = RateLimiterConfig.custom()
+                .limitForPeriod(5)
+                .limitRefreshPeriod(Duration.ofSeconds(1))
+                .timeoutDuration(Duration.ZERO)
+                .build();
+        this.rateLimiter = RateLimiterRegistry.of(config).rateLimiter("api");
+    }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        if (rateLimiter.tryAcquire()) {
+        if (rateLimiter.acquirePermission()) {
             return true;
         } else {
             response.setStatus(429);
             response.getWriter().write("请求过于频繁");
             return false;
         }
-
     }
 }
