@@ -1,7 +1,7 @@
 package com.ligg.controller;
 
 import com.ligg.pojo.Result;
-import com.ligg.service.UserService;
+import com.ligg.service.User.UserService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.constraints.Email;
 import org.springframework.beans.factory.annotation.Autowired;

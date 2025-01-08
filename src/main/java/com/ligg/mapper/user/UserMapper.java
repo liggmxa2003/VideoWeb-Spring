@@ -1,6 +1,6 @@
 package com.ligg.mapper.user;
 
-import com.ligg.pojo.User;
+import com.ligg.pojo.user.User;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;

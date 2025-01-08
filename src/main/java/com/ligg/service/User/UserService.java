@@ -1,10 +1,9 @@
-package com.ligg.service;
+package com.ligg.service.User;
 
-import com.ligg.pojo.User;
+import com.ligg.pojo.user.User;
 import com.qiniu.common.QiniuException;
 
 import java.util.List;
-import java.util.Map;
 
 
 public interface UserService {

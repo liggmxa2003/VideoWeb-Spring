@@ -1,8 +1,8 @@
 package com.ligg.controller.user;
 
 import com.ligg.pojo.Result;
-import com.ligg.pojo.User;
-import com.ligg.service.UserService;
+import com.ligg.pojo.user.User;
+import com.ligg.service.User.UserService;
 import com.qiniu.common.QiniuException;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.constraints.Email;

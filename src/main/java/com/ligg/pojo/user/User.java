@@ -1,4 +1,4 @@
-package com.ligg.pojo;
+package com.ligg.pojo.user;
 
 
 

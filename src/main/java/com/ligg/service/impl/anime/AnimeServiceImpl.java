@@ -5,6 +5,7 @@ import com.github.pagehelper.PageHelper;
 import com.ligg.mapper.anime.AnimeMapper;
 import com.ligg.mapper.user.UserMapper;
 import com.ligg.pojo.*;
+import com.ligg.pojo.user.User;
 import com.ligg.service.AnimeService;
 import com.ligg.utils.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,8 +1,8 @@
 package com.ligg.service.impl.user;
 
 import com.ligg.mapper.user.UserMapper;
-import com.ligg.pojo.User;
-import com.ligg.service.UserService;
+import com.ligg.pojo.user.User;
+import com.ligg.service.User.UserService;
 import com.ligg.utils.JwtUtil;
 import com.ligg.utils.Md5Util;
 import com.ligg.utils.QiNiuOssUtil;

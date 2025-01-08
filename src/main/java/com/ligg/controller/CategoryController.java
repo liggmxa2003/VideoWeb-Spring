@@ -2,15 +2,12 @@ package com.ligg.controller;
 
 import com.ligg.pojo.Category;
 import com.ligg.pojo.Result;
-import com.ligg.pojo.User;
 import com.ligg.service.CategoryService;
-import com.ligg.utils.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 //分类接口
 @RestController

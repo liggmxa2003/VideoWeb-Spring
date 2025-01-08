@@ -1,7 +1,6 @@
 package com.ligg.controller;
 
 import com.ligg.pojo.Result;
-import com.ligg.pojo.User;
 import com.ligg.pojo.Video;
 import com.ligg.service.VideoService;
 import org.springframework.beans.factory.annotation.Autowired;
