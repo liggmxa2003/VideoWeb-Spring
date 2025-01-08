@@ -1,6 +1,7 @@
 package com.ligg.mapper.user;
 
 import com.ligg.pojo.Result;
+import com.ligg.pojo.dto.UserFollowDto;
 import com.ligg.pojo.user.UserFollow;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
@@ -21,4 +22,6 @@ public interface UserFollowMapper {
     // 查询关注信息
     @Select("select * from user_follow where user_id = #{userId} and follow_user_id = #{id}")
     List<UserFollow> list(Integer userId, Long id);
+    // 查询关注列表
+    List<UserFollowDto> followList(Integer id);
 }
