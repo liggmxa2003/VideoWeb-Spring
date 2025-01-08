@@ -24,15 +24,18 @@ public class UserFollowServiceImpl implements UserFollowService {
         Integer userId = (Integer) map.get("id");
         if (isFollow) {
             //关注
+            if (!userFollowMapper.list(userId, id).isEmpty()) {
+                return Result.error("已关注");
+            }
             userFollowMapper.userFollow(userId,id);
-            return Result.success();
         } else {
             //取消关注
             userFollowMapper.userUnFollow(userId,id);
-            return Result.success();
         }
+        return Result.success();
     }
 
+    // 查询关注列表
     @Override
     public List<UserFollow> list(Long id) {
         Map<String,Object> map = ThreadLocalUtil.get();

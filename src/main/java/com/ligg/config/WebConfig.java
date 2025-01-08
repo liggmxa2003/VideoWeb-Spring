@@ -1,5 +1,6 @@
 package com.ligg.config;
 
+import com.ligg.component.RateLimitInterceptor;
 import com.ligg.interceptors.LoginInterceptors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +16,8 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Autowired
     private LoginInterceptors loginInterceptors;
-
+    @Autowired
+    private RateLimitInterceptor rateLimitInterceptor;
     // 拦截器配置
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -25,7 +27,9 @@ public class WebConfig implements WebMvcConfigurer {
                 .excludePathPatterns(getExcludePaths())
                 .addPathPatterns("/user/**", "/uploadVideo", "/upload","/comments/publish","/anime/**");
 
-        // 其他拦截器...
+        // 请求截器
+        registry.addInterceptor(rateLimitInterceptor)
+                .addPathPatterns("/**");
     }
 
     // 集中管理放行路径
