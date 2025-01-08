@@ -2,6 +2,7 @@ package com.ligg.service.impl.user;
 
 import com.ligg.mapper.user.UserFollowMapper;
 import com.ligg.pojo.Result;
+import com.ligg.pojo.dto.UserFollowDto;
 import com.ligg.pojo.user.UserFollow;
 import com.ligg.service.User.UserFollowService;
 import com.ligg.utils.ThreadLocalUtil;
@@ -35,11 +36,18 @@ public class UserFollowServiceImpl implements UserFollowService {
         return Result.success();
     }
 
-    // 查询关注列表
+    // 查询用户关注信息
     @Override
     public List<UserFollow> list(Long id) {
         Map<String,Object> map = ThreadLocalUtil.get();
         Integer userId = (Integer) map.get("id");
         return userFollowMapper.list(userId, id);
+    }
+    // 查询用户关注列表
+    @Override
+    public List<UserFollowDto> followList() {
+        Map<String,Object> map = ThreadLocalUtil.get();
+        Integer id = (Integer) map.get("id");
+        return userFollowMapper.followList(id);
     }
 }

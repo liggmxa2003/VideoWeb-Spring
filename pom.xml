@@ -110,11 +110,11 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
-        <!--guava依赖限制接口的频率-->
+        <!--限制接口的频率依赖-->
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>31.0.1-jre</version>
+            <groupId>io.github.resilience4j</groupId>
+            <artifactId>resilience4j-ratelimiter</artifactId>
+            <version>1.7.0</version>
         </dependency>
     </dependencies>
 

@@ -35,5 +35,6 @@
         </list>
       </option>
     </inspection_tool>
+    <inspection_tool class="ReassignedVariable" enabled="false" level="TEXT ATTRIBUTES" enabled_by_default="false" />
   </profile>
 </component>

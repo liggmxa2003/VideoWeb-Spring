@@ -14,8 +14,8 @@ public interface UserMapper {
     @Select("select * from user where username=#{username}")
     User findByUserName(String username);
     // 注册
-    @Insert("insert into user(username,password,nickname,email,create_time,update_time)" +
-            "values (#{username},#{password},#{nickname},#{email},now(),now())")
+    @Insert("insert into user(id,username,password,nickname,email,create_time,update_time)" +
+            "values (#{id},#{username},#{password},#{nickname},#{email},now(),now())")
     void add(User user);
     // 编辑用户信息
     void update(User user);
@@ -39,4 +39,6 @@ public interface UserMapper {
     List<User> findByUserChat(String username);
     @Update("update user set id=#{uId} where id=#{id}")
     void updateUserId(Integer id, Long uId);
+    @Select("select id from user where id=#{userId}")
+    Integer findById(Long userId);
 }

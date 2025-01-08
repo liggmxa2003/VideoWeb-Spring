@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
-    private Integer id;//主键ID
+    private Long id;//主键ID
     @Pattern(regexp = "[a-z A-Z0-9]{6,16}")
     private String username;//用户名
     @JsonIgnore//忽略

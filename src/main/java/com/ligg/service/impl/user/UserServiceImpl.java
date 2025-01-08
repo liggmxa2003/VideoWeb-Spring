@@ -71,15 +71,20 @@ public class UserServiceImpl implements UserService {
                 user.setPassword(md5String);
                 //生成随机用户昵称
                 user.setNickname("昵称_" + UUID.randomUUID().toString().substring(0, 6));
-                //注册用户
-                userMapper.add(user);
                 //生成6到8个字符的随机整数
                 Random random = new Random();
-                int userId = 100000 + random.nextInt(900000);
-
-                User userInfo = userMapper.findByUserName(user.getUsername());
-                Long uId = Long.valueOf(userId + userInfo.getId().toString());
-                userMapper.updateUserId(userInfo.getId(), uId);
+                long randomPart = (1000000 + random.nextInt(9000000));
+                // 拼接固定整数
+                long fixedPart = 245L;
+                long userId = fixedPart * 10000000L + randomPart;
+                //判断用户id是否重复
+                while (userMapper.findById(userId) != null) {
+                    randomPart = (1000000 + random.nextInt(9000000));
+                    userId = fixedPart * 10000000L + randomPart;
+                }
+                user.setId(userId);
+                //注册用户
+                userMapper.add(user);
                 //清除Redis中的键值对
                 stringRedisTemplate.delete(key);
                 return null;
@@ -174,7 +179,7 @@ public class UserServiceImpl implements UserService {
             if (oldToken != null) {
                 // 删除 Redis 中的 token
                 stringRedisTemplate.delete(oldToken);
-                log.info("Deleted token for user: {}", username);
+                log.info("已删除用户:{} 的令牌", username);
             } else {
                 log.warn("No token found for user: {}", username);
             }
@@ -192,7 +197,7 @@ public class UserServiceImpl implements UserService {
         if (map == null || map.get("id") == null || map.get("username") == null) {
             throw new IllegalArgumentException("Required parameters are missing in ThreadLocalUtil");
         }
-        user.setId((Integer) map.get("id"));
+        user.setId(Long.valueOf((Integer) map.get("id")));
         user.setUsername((String) map.get("username"));
         try {
             User oldAvatarUrl = userMapper.findByUserName(user.getUsername());
