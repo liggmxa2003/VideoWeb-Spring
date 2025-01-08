@@ -14,11 +14,10 @@ public interface UserMapper {
     @Select("select * from user where username=#{username}")
     User findByUserName(String username);
     // 注册
-    @Insert("insert into user(username,password,email,create_time,update_time)" +
-            "values (#{username},#{password},#{email},now(),now())")
+    @Insert("insert into user(username,password,nickname,email,create_time,update_time)" +
+            "values (#{username},#{password},#{nickname},#{email},now(),now())")
     void add(User user);
     // 编辑用户信息
-    @Update("update user set nickname=#{nickname},sex=#{sex},introduction=#{introduction},user_pic=#{userPic},update_time=NOW() where id=#{id}")
     void update(User user);
     // 更新头像
     @Update("update user set user_pic=#{avatarUrl},update_time=NOW() where id=#{id}")

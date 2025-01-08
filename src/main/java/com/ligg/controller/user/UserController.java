@@ -26,9 +26,9 @@ import java.util.concurrent.TimeUnit;
 
 
 //用户接口
+@Validated
 @RestController
 @RequestMapping("/user")
-@Validated
 public class UserController {
 
     @Autowired
@@ -69,7 +69,7 @@ public class UserController {
 
     //登录
     @PostMapping("/login")
-    public Result login(@Pattern(regexp = "[a-z A-Z0-9]{6,15}") String username,
+    public Result<String> login(@Pattern(regexp = "[a-z A-Z0-9]{6,15}") String username,
                         @Pattern(regexp = "[a-z A-Z0-9]{6,15}") String password) {
         //校验
         String u = userService.login(username, password);

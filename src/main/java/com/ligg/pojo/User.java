@@ -24,7 +24,7 @@ public class User {
     @Pattern(regexp = "^\\S{6,16}$")//2-10位非空字符
     private String password;//密码
     @NotEmpty(groups = User.Update.class)
-    @Pattern(regexp = "^\\S{2,12}$")//2-10位非空字符
+    @Pattern(regexp = "^\\S{2,13}$")//2-10位非空字符
     private String nickname;//昵称
     @Sex(groups = User.Update.class)
     private Integer sex;//性别

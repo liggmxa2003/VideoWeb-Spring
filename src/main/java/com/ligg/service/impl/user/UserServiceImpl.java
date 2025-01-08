@@ -68,6 +68,8 @@ public class UserServiceImpl implements UserService {
                 //MD5加密
                 String md5String = Md5Util.getMD5String(user.getPassword());
                 user.setPassword(md5String);
+                //生成随机用户昵称
+                user.setNickname("昵称_"+UUID.randomUUID().toString().substring(0, 6));
                 //注册用户
                 userMapper.add(user);
                 //清除Redis中的键值对
@@ -178,15 +180,12 @@ public void deleteToken() {
 @Override
 public String update(User user) throws QiniuException {
     Map<String, Object> map = ThreadLocalUtil.get();
-
     // 空指针检查
     if (map == null || map.get("id") == null || map.get("username") == null) {
         throw new IllegalArgumentException("Required parameters are missing in ThreadLocalUtil");
     }
-
     user.setId((Integer) map.get("id"));
     user.setUsername((String) map.get("username"));
-
     try {
         User oldAvatarUrl = userMapper.findByUserName(user.getUsername());
 
@@ -204,7 +203,7 @@ public String update(User user) throws QiniuException {
         userMapper.update(user);
     } catch (Exception e) {
         // 处理数据库查询异常
-        throw new QiniuException(e, "Failed to update user or find old avatar");
+        throw new QiniuException(e, "更新用户或查找旧头像失败");
     }
 
     return null;
