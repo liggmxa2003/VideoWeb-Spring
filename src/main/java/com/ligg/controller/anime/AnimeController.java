@@ -5,6 +5,7 @@ import com.ligg.pojo.Episode;
 import com.ligg.pojo.PageBean;
 import com.ligg.pojo.Result;
 import com.ligg.service.AnimeService;
+import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,7 +40,11 @@ public class AnimeController {
         animeService.update(animeId,anime);
         return Result.success();
     }
-
+    //番剧删除
+    @DeleteMapping("/{animeId}")
+    public Result<String> delete(@PathVariable("animeId")Long animeId){
+        return animeService.delete(animeId);
+    }
     //发布动漫集数
     @PostMapping("/episode")
     public Result<String> publishEpisode(@RequestBody Episode episode){

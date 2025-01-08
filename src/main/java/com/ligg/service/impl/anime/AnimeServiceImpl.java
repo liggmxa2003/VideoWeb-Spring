@@ -53,11 +53,13 @@ public class AnimeServiceImpl implements AnimeService {
         animeMapper.publishEpisode(episode);
         return null;
     }
+
     // 获取动漫集数
     @Override
     public List<Episode> episode(Long animeId) {
         return animeMapper.episode(animeId);
     }
+
     // 获取动漫列表
     @Override
     public PageBean<Anime> list(Integer pageNum, Integer pageSize) {
@@ -75,8 +77,14 @@ public class AnimeServiceImpl implements AnimeService {
     }
 
     @Override
-    public void update(Long AnimeId,Anime anime) {
+    public void update(Long AnimeId, Anime anime) {
         anime.setAnimeId(AnimeId);
         animeMapper.update(anime);
+    }
+
+    @Override
+    public Result<String> delete(Long animeId) {
+        animeMapper.delete(animeId);
+        return Result.success();
     }
 }

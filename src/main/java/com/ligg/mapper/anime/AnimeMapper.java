@@ -2,10 +2,7 @@ package com.ligg.mapper.anime;
 
 import com.ligg.pojo.Anime;
 import com.ligg.pojo.Episode;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -29,4 +26,7 @@ public interface AnimeMapper {
     @Update("update anime set title=#{title},cover_image=#{coverImage},status=#{status},description=#{description},updated_at=NOW() " +
             "where anime_id=#{animeId}")
     void update(Anime anime);
+    //删除番剧
+    @Delete("delete from anime where anime_id=#{animeId}")
+    int delete(Long animeId);
 }

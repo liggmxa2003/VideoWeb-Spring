@@ -3,6 +3,7 @@ package com.ligg.service;
 import com.ligg.pojo.Anime;
 import com.ligg.pojo.Episode;
 import com.ligg.pojo.PageBean;
+import com.ligg.pojo.Result;
 
 import java.util.List;
 
@@ -19,4 +20,6 @@ public interface AnimeService {
     PageBean<Anime> list(Integer pageNum, Integer pageSize);
     //编辑番剧
     void update(Long AnimeId,Anime anime);
+    //删除番剧
+    Result<String> delete(Long animeId);
 }
