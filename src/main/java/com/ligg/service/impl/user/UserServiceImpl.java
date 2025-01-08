@@ -43,6 +43,7 @@ public class UserServiceImpl implements UserService {
         String username = (String) map.get("username");
         return userMapper.findByUserName(username);
     }
+
     //根据用户名查询用户信息
     @Override
     public User findUseInfo(User user) {
@@ -69,9 +70,16 @@ public class UserServiceImpl implements UserService {
                 String md5String = Md5Util.getMD5String(user.getPassword());
                 user.setPassword(md5String);
                 //生成随机用户昵称
-                user.setNickname("昵称_"+UUID.randomUUID().toString().substring(0, 6));
+                user.setNickname("昵称_" + UUID.randomUUID().toString().substring(0, 6));
                 //注册用户
                 userMapper.add(user);
+                //生成6到8个字符的随机整数
+                Random random = new Random();
+                int userId = 100000 + random.nextInt(900000);
+
+                User userInfo = userMapper.findByUserName(user.getUsername());
+                Long uId = Long.valueOf(userId + userInfo.getId().toString());
+                userMapper.updateUserId(userInfo.getId(), uId);
                 //清除Redis中的键值对
                 stringRedisTemplate.delete(key);
                 return null;
@@ -141,74 +149,73 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String findUsername(String username) {
-        Map<String,Object> map = ThreadLocalUtil.get();
+        Map<String, Object> map = ThreadLocalUtil.get();
         String u = (String) map.get("username");
         if (username.equals(u))
             return "不可以给自己发私信";
         return null;
     }
+
     //删除token
-   @Override
-public void deleteToken() {
-    // 获取 ThreadLocal 中的用户信息
-    Map<String, Object> map = ThreadLocalUtil.get();
-    if (map == null || !map.containsKey("username")) {
-        log.warn("User information not found in ThreadLocal");
-        return;
-    }
-
-    String username = (String) map.get("username");
-
-    try {
-        // 从 Redis 中获取用户的旧 token
-        String oldToken = stringRedisTemplate.opsForValue().get(username);
-        if (oldToken != null) {
-            // 删除 Redis 中的 token
-            stringRedisTemplate.delete(oldToken);
-            log.info("Deleted token for user: {}", username);
-        } else {
-            log.warn("No token found for user: {}", username);
+    @Override
+    public void deleteToken() {
+        // 获取 ThreadLocal 中的用户信息
+        Map<String, Object> map = ThreadLocalUtil.get();
+        if (map == null || !map.containsKey("username")) {
+            log.warn("User information not found in ThreadLocal");
+            return;
         }
-    } catch (Exception e) {
-        log.error("Error deleting token for user: {}", username, e);
-    }
-}
 
+        String username = (String) map.get("username");
+
+        try {
+            // 从 Redis 中获取用户的旧 token
+            String oldToken = stringRedisTemplate.opsForValue().get(username);
+            if (oldToken != null) {
+                // 删除 Redis 中的 token
+                stringRedisTemplate.delete(oldToken);
+                log.info("Deleted token for user: {}", username);
+            } else {
+                log.warn("No token found for user: {}", username);
+            }
+        } catch (Exception e) {
+            log.error("Error deleting token for user: {}", username, e);
+        }
+    }
 
 
     // 修改用户信息
-@Override
-public String update(User user) throws QiniuException {
-    Map<String, Object> map = ThreadLocalUtil.get();
-    // 空指针检查
-    if (map == null || map.get("id") == null || map.get("username") == null) {
-        throw new IllegalArgumentException("Required parameters are missing in ThreadLocalUtil");
-    }
-    user.setId((Integer) map.get("id"));
-    user.setUsername((String) map.get("username"));
-    try {
-        User oldAvatarUrl = userMapper.findByUserName(user.getUsername());
+    @Override
+    public String update(User user) throws QiniuException {
+        Map<String, Object> map = ThreadLocalUtil.get();
+        // 空指针检查
+        if (map == null || map.get("id") == null || map.get("username") == null) {
+            throw new IllegalArgumentException("Required parameters are missing in ThreadLocalUtil");
+        }
+        user.setId((Integer) map.get("id"));
+        user.setUsername((String) map.get("username"));
+        try {
+            User oldAvatarUrl = userMapper.findByUserName(user.getUsername());
 
-        // 如果新头像和旧头像不一样，并且旧头像不为空，就删除旧头像
-        if (oldAvatarUrl != null && !Objects.equals(oldAvatarUrl.getUserPic(), user.getUserPic())) {
-            if (oldAvatarUrl.getUserPic() != null && !oldAvatarUrl.getUserPic().isEmpty()) {
-                String oldAvatarKey = parseKeyFromUrl(oldAvatarUrl.getUserPic());
-                try {
-                    QiNiuOssUtil.deleteFile(oldAvatarKey);
-                } catch (Exception ignored) {
+            // 如果新头像和旧头像不一样，并且旧头像不为空，就删除旧头像
+            if (oldAvatarUrl != null && !Objects.equals(oldAvatarUrl.getUserPic(), user.getUserPic())) {
+                if (oldAvatarUrl.getUserPic() != null && !oldAvatarUrl.getUserPic().isEmpty()) {
+                    String oldAvatarKey = parseKeyFromUrl(oldAvatarUrl.getUserPic());
+                    try {
+                        QiNiuOssUtil.deleteFile(oldAvatarKey);
+                    } catch (Exception ignored) {
+                    }
                 }
             }
+
+            userMapper.update(user);
+        } catch (Exception e) {
+            // 处理数据库查询异常
+            throw new QiniuException(e, "更新用户或查找旧头像失败");
         }
 
-        userMapper.update(user);
-    } catch (Exception e) {
-        // 处理数据库查询异常
-        throw new QiniuException(e, "更新用户或查找旧头像失败");
+        return null;
     }
-
-    return null;
-}
-
 
 
     //修改用户头像

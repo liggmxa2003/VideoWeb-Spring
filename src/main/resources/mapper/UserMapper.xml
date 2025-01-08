@@ -6,6 +6,9 @@
     <update id="update">
         update user
         <set>
+            <if test="id != null">
+                username = #{id},
+            </if>
             <if test="nickname != null">
                 nickname = #{nickname},
             </if>

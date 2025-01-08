@@ -37,4 +37,6 @@ public interface UserMapper {
     List<User> findByUserId(Integer id);
     @Select("select nickname,user_pic from user where username=#{username}")
     List<User> findByUserChat(String username);
+    @Update("update user set id=#{uId} where id=#{id}")
+    void updateUserId(Integer id, Long uId);
 }
