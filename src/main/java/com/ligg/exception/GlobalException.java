@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalException {
 
     @ExceptionHandler(Exception.class)
-    public Result handleException(Exception e) {
+    public Result<String> handleException(Exception e) {
         e.printStackTrace();
         return Result.error(StringUtils.hasLength(e.getMessage())?e.getMessage(): "操作错误");
     }
