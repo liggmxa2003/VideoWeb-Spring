@@ -28,28 +28,38 @@ public class UserVideoServiceImpl implements UserVideoService {
     @Override
     public void add(@RequestBody Video video) {
         Map<String, Object> map = ThreadLocalUtil.get();
-        video.setUserId((Integer) map.get("id"));
+        video.setUserId((Long) map.get("id"));
         userVideoMapper.add(video);
     }
 
     // 分页查询用户视频信息列表
-    @Override
-    public PageBean<Video> list(Integer pageNum, Integer pageSize, Integer categoryId, String state) {
-        // 封装分页数据
-        PageBean<Video> pb = new PageBean<>();
-        //开启分页查询
-        PageHelper.startPage(pageNum, pageSize);
-        //获取用户id
-        Map<String, Object> map = ThreadLocalUtil.get();
-        Integer userId = (Integer) map.get("id");
-        List<Video> as = userVideoMapper.list(userId,categoryId,state);
-        //Page提供了方法，可以获取PageHelper分页查询后得到的总记录条数和当前页数据
-        Page<Video> p = (Page<Video>) as;
-        //把数据填充到PageBean中
-        pb.setItems(p.getResult());
-        pb.setTotal(p.getTotal());
-        return pb;
+   @Override
+public PageBean<Video> list(Integer pageNum, Integer pageSize, Integer categoryId, String state) {
+    // 初始化分页对象
+    PageBean<Video> pb = new PageBean<>();
+    // 开始分页
+    PageHelper.startPage(pageNum, pageSize);
+    // 获取用户ID
+    Map<String, Object> map = ThreadLocalUtil.get();
+    Object idObj = map.get("id");
+    long userId;
+    if (idObj instanceof Integer) {
+        userId = ((Integer) idObj).longValue();
+    } else if (idObj instanceof Long) {
+        userId = (Long) idObj;
+    } else {
+        throw new IllegalArgumentException("用户 ID 的类型无效： " + idObj.getClass().getName());
     }
+    // 查询视频列表
+    List<Video> as = userVideoMapper.list(userId, categoryId, state);
+    // 将查询结果封装到PageBean中
+    Page<Video> p = (Page<Video>) as;
+    pb.setItems(p.getResult());
+    pb.setTotal(p.getTotal());
+
+    return pb;
+}
+
 
     // 更新用户视频
     @Override
@@ -66,7 +76,7 @@ public class UserVideoServiceImpl implements UserVideoService {
     @Override
     public Boolean listByUserId(Video userVideo) {
         Map<String, Object> map = ThreadLocalUtil.get();
-        userVideo.setUserId((Integer) map.get("id"));
+        userVideo.setUserId((Long) map.get("id"));
         Video u = userVideoMapper.findById(userVideo);
         /*if (u.getUserId() != userVideo.getUserId())
             return false;

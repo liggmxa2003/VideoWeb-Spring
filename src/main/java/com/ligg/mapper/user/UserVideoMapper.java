@@ -16,7 +16,7 @@ public interface UserVideoMapper {
     void add(Video video);
     // 分页查询用户视频
     @Select("select * from video where user_id=#{userId} order by update_time desc")
-    List<Video> list(Integer userId, Integer categoryId, String state);
+    List<Video> list(Long userId, Integer categoryId, String state);
     // 修改用户视频信息
     void update(Video userVideo);
     // 根据用户id查询视频信息

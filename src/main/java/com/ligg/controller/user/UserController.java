@@ -62,7 +62,7 @@ public class UserController {
     @PostMapping("/login")
     public Result<String> login(@Pattern(regexp = "[a-z A-Z0-9]{6,15}") String username,
                         @Pattern(regexp = "[a-z A-Z0-9]{6,15}") String password) {
-        //校验
+        //登录
         String u = userService.login(username, password);
         if (u != null)
             return Result.error(u);

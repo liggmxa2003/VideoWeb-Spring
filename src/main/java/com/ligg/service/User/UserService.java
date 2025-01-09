@@ -22,7 +22,7 @@ public interface UserService {
     String sendValidateCode(String email,String sessionId,boolean hasUsername);
     // 重置密码
     String updatePasswordWhereEmail(String email,String password,Integer code,String sessionId);
-    // 登录
+    // 登录校验
     String login(String username, String password);
     //token
     String userToken(String username, String password);

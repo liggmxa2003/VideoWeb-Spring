@@ -15,13 +15,13 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Video {
     @NotNull(groups = Video.Update.class)
-    private Integer id;//id
+    private Long id;//id
     @NotEmpty
     @Pattern(regexp = "^\\S{2,20}$")
     private String title;//标题
     @NotEmpty
     private String cover;//封面
-    private Integer userId;//用户id
+    private Long userId;//用户id
     private String nickname;//用户昵称
     private String userPic;//用户头像
     private String username;

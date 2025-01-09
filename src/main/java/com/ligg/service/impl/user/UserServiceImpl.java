@@ -73,13 +73,13 @@ public class UserServiceImpl implements UserService {
                 user.setNickname("昵称_" + UUID.randomUUID().toString().substring(0, 6));
                 //生成6到8个字符的随机整数
                 Random random = new Random();
-                long randomPart = (1000000 + random.nextInt(9000000));
+                long randomPart = (100000 + random.nextInt(900000));
                 // 拼接固定整数
                 long fixedPart = 245L;
                 long userId = fixedPart * 10000000L + randomPart;
                 //判断用户id是否重复
                 while (userMapper.findById(userId) != null) {
-                    randomPart = (1000000 + random.nextInt(9000000));
+                    randomPart = (100000 + random.nextInt(900000));
                     userId = fixedPart * 10000000L + randomPart;
                 }
                 user.setId(userId);
@@ -120,7 +120,7 @@ public class UserServiceImpl implements UserService {
             return "先获取验证码";
     }
 
-    //登录
+    //登录校验
     @Override
     public String login(String username, String password) {
         User user = userMapper.findByUserName(username);
