@@ -17,7 +17,7 @@
              anime_episode e on e.anime_id = a.anime_id
         where a.anime_id = #{animeId}
     </update>
-    <select id="findById" resultType="com.ligg.pojo.data.AnimeData">
+    <select id="findById" resultType="com.ligg.pojo.Anime">
         select a.anime_id,
                a.title,
                a.description,

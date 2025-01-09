@@ -1,8 +1,7 @@
 package com.ligg.mapper.anime;
 
 import com.ligg.pojo.Anime;
-import com.ligg.pojo.Episode;
-import com.ligg.pojo.data.AnimeData;
+import com.ligg.pojo.AnimeEpisode;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -15,11 +14,12 @@ public interface AnimeMapper {
     //获取轮播图
     @Select("select * from anime where recommend=#{recommend} order by anime_id desc")
     List<Anime> Carousel(Integer recommend);
-    @Insert("insert into anime_episode(anime_id,title,air_date,duration,episode_number,anime_url) " +
-            "values(#{animeId},#{title},#{airDate},#{duration},#{episodeNumber},#{animeUrl})")
-    void publishEpisode(Episode episode);
+    //发布动漫章节
+    @Insert("insert into anime_episode(anime_id,episode_title,air_date,duration,episode_number,episode_image,episode_video) " +
+            "values(#{animeId},#{title},#{airDate},#{duration},#{episodeNumber},#{episodeImage},#{episodeVideo})")
+    void publishEpisode(AnimeEpisode episode);
     //获取动漫的章节
-    List<Episode> episode(Long animeId); 
+    List<AnimeEpisode> episode(Long animeId);
     //获取动漫列表
     @Select("select * from anime order by anime_id desc")
     List<Anime> list();
@@ -31,5 +31,8 @@ public interface AnimeMapper {
     @Delete("delete from anime where anime_id=#{animeId}")
     int delete(Long animeId);
     //查询番剧信息
-    List<AnimeData> findById(Long id);
+    List<Anime> findById(Long id);
+    //查询番剧章节信息
+    @Select("select * from anime_episode where anime_id=#{animeId} order by episode_number asc")
+    List<AnimeEpisode> findEpisodeById(Long id);
 }

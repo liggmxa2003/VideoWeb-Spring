@@ -1,7 +1,7 @@
 package com.ligg.controller.user;
 
 import com.ligg.pojo.Result;
-import com.ligg.pojo.data.UserFollowData;
+import com.ligg.pojo.dto.UserFollowData;
 import com.ligg.pojo.user.UserFollow;
 import com.ligg.service.User.UserFollowService;
 import jakarta.annotation.Resource;

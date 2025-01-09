@@ -5,7 +5,6 @@ import com.github.pagehelper.PageHelper;
 import com.ligg.mapper.anime.AnimeMapper;
 import com.ligg.mapper.user.UserMapper;
 import com.ligg.pojo.*;
-import com.ligg.pojo.data.AnimeData;
 import com.ligg.pojo.user.User;
 import com.ligg.service.AnimeService;
 import com.ligg.utils.ThreadLocalUtil;
@@ -45,7 +44,7 @@ public class AnimeServiceImpl implements AnimeService {
 
     // 发布动漫集数
     @Override
-    public String publishEpisode(Episode episode) {
+    public String publishEpisode(AnimeEpisode episode) {
         //判断用户是否有权限发布动漫
         Map<String, Object> map = ThreadLocalUtil.get();
         String username = (String) map.get("username");
@@ -58,7 +57,7 @@ public class AnimeServiceImpl implements AnimeService {
 
     // 获取动漫集数
     @Override
-    public List<Episode> episode(Long animeId) {
+    public List<AnimeEpisode> episode(Long animeId) {
         return animeMapper.episode(animeId);
     }
 
@@ -89,9 +88,9 @@ public class AnimeServiceImpl implements AnimeService {
         animeMapper.delete(animeId);
         return Result.success();
     }
-
+    // 根据id查询动漫
     @Override
-    public List<AnimeData> findById(Long id) {
+    public List<Anime> findById(Long id) {
         return animeMapper.findById(id);
     }
 }

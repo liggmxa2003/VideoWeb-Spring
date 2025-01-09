@@ -1,7 +1,7 @@
 package com.ligg.service.User;
 
 import com.ligg.pojo.Result;
-import com.ligg.pojo.data.UserFollowData;
+import com.ligg.pojo.dto.UserFollowData;
 import com.ligg.pojo.user.UserFollow;
 
 import java.util.List;

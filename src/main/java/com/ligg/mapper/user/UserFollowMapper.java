@@ -1,6 +1,6 @@
 package com.ligg.mapper.user;
 
-import com.ligg.pojo.data.UserFollowData;
+import com.ligg.pojo.dto.UserFollowData;
 import com.ligg.pojo.user.UserFollow;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;

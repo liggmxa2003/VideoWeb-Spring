@@ -1,10 +1,9 @@
 package com.ligg.service;
 
 import com.ligg.pojo.Anime;
-import com.ligg.pojo.Episode;
+import com.ligg.pojo.AnimeEpisode;
 import com.ligg.pojo.PageBean;
 import com.ligg.pojo.Result;
-import com.ligg.pojo.data.AnimeData;
 
 import java.util.List;
 
@@ -14,9 +13,9 @@ public interface AnimeService {
     //轮播图
     List<Anime> Carousel();
     //发布动漫集
-    String publishEpisode(Episode episode);
+    String publishEpisode(AnimeEpisode episode);
     //查询动漫集
-    List<Episode> episode(Long animeId);
+    List<AnimeEpisode> episode(Long animeId);
     //番剧列表
     PageBean<Anime> list(Integer pageNum, Integer pageSize);
     //编辑番剧
@@ -24,5 +23,5 @@ public interface AnimeService {
     //删除番剧
     Result<String> delete(Long animeId);
     //查询番剧详细信息
-    List<AnimeData> findById(Long id);
+    List<Anime> findById(Long id);
 }

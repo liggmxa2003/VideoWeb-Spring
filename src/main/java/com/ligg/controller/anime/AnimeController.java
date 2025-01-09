@@ -1,10 +1,9 @@
 package com.ligg.controller.anime;
 
 import com.ligg.pojo.Anime;
-import com.ligg.pojo.Episode;
+import com.ligg.pojo.AnimeEpisode;
 import com.ligg.pojo.PageBean;
 import com.ligg.pojo.Result;
-import com.ligg.pojo.data.AnimeData;
 import com.ligg.service.AnimeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -47,7 +46,7 @@ public class AnimeController {
     }
     //发布动漫集数
     @PostMapping("/episode")
-    public Result<String> publishEpisode(@RequestBody Episode episode){
+    public Result<String> publishEpisode(@RequestBody AnimeEpisode episode){
         String a = animeService.publishEpisode(episode);
         if (a != null)
             return Result.error(a);
@@ -55,14 +54,14 @@ public class AnimeController {
     }
     //查询动漫集数
     @GetMapping("/episode")
-    public Result<List<Episode>> episode(@RequestParam("animeId") Long animeId){
-        List<Episode> episode = animeService.episode(animeId);
+    public Result<List<AnimeEpisode>> episode(@RequestParam("animeId") Long animeId){
+        List<AnimeEpisode> episode = animeService.episode(animeId);
         return Result.success(episode);
     }
     //番剧详细信息
     @GetMapping("/{id}")
-    private Result<List<AnimeData>> findById(@PathVariable("id") Long id){
-        List<AnimeData> animeData = animeService.findById(id);
+    private Result<List<Anime>> findById(@PathVariable("id") Long id){
+        List<Anime> animeData = animeService.findById(id);
         return Result.success(animeData);
     }
 }
