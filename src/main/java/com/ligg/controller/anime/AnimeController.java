@@ -4,6 +4,7 @@ import com.ligg.pojo.Anime;
 import com.ligg.pojo.Episode;
 import com.ligg.pojo.PageBean;
 import com.ligg.pojo.Result;
+import com.ligg.pojo.data.AnimeData;
 import com.ligg.service.AnimeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -57,5 +58,11 @@ public class AnimeController {
     public Result<List<Episode>> episode(@RequestParam("animeId") Long animeId){
         List<Episode> episode = animeService.episode(animeId);
         return Result.success(episode);
+    }
+    //番剧详细信息
+    @GetMapping("/{id}")
+    private Result<List<AnimeData>> findById(@PathVariable("id") Long id){
+        List<AnimeData> animeData = animeService.findById(id);
+        return Result.success(animeData);
     }
 }

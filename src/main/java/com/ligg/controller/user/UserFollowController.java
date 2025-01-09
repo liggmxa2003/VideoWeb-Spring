@@ -1,8 +1,7 @@
 package com.ligg.controller.user;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ligg.pojo.Result;
-import com.ligg.pojo.dto.UserFollowDto;
+import com.ligg.pojo.data.UserFollowData;
 import com.ligg.pojo.user.UserFollow;
 import com.ligg.service.User.UserFollowService;
 import jakarta.annotation.Resource;
@@ -31,9 +30,9 @@ public class UserFollowController {
     }
     //获取关注列表
     @GetMapping("/list")
-    public Result<List<UserFollowDto>> followList() {
+    public Result<List<UserFollowData>> followList() {
         // TODO 接口未完善
-        List<UserFollowDto> list = userFollowService.followList();
+        List<UserFollowData> list = userFollowService.followList();
         return Result.success(list);
     }
 }

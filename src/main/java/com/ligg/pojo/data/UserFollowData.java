@@ -1,4 +1,4 @@
-package com.ligg.pojo.dto;
+package com.ligg.pojo.data;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserFollowDto {
+public class UserFollowData {
     private Long id;
     private Long userId;
     private Long followUserId;

@@ -5,6 +5,7 @@ import com.github.pagehelper.PageHelper;
 import com.ligg.mapper.anime.AnimeMapper;
 import com.ligg.mapper.user.UserMapper;
 import com.ligg.pojo.*;
+import com.ligg.pojo.data.AnimeData;
 import com.ligg.pojo.user.User;
 import com.ligg.service.AnimeService;
 import com.ligg.utils.ThreadLocalUtil;
@@ -87,5 +88,10 @@ public class AnimeServiceImpl implements AnimeService {
     public Result<String> delete(Long animeId) {
         animeMapper.delete(animeId);
         return Result.success();
+    }
+
+    @Override
+    public List<AnimeData> findById(Long id) {
+        return animeMapper.findById(id);
     }
 }

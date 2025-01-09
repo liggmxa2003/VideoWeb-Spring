@@ -17,5 +17,23 @@
              anime_episode e on e.anime_id = a.anime_id
         where a.anime_id = #{animeId}
     </update>
+    <select id="findById" resultType="com.ligg.pojo.data.AnimeData">
+        select a.anime_id,
+               a.title,
+               a.description,
+               a.cover_image,
+               a.release_date,
+               a.status,
+               e.episode_id,
+               e.episode_title,
+               e.air_date,
+               e.duration,
+               e.episode_number,
+               e.episode_image
+        from anime a
+                 left join
+             anime_episode e on e.anime_id = a.anime_id
+        where a.anime_id = #{id}
+    </select>
 
 </mapper>

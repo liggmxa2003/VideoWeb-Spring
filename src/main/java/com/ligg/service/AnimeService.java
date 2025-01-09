@@ -4,6 +4,7 @@ import com.ligg.pojo.Anime;
 import com.ligg.pojo.Episode;
 import com.ligg.pojo.PageBean;
 import com.ligg.pojo.Result;
+import com.ligg.pojo.data.AnimeData;
 
 import java.util.List;
 
@@ -22,4 +23,6 @@ public interface AnimeService {
     void update(Long AnimeId,Anime anime);
     //删除番剧
     Result<String> delete(Long animeId);
+    //查询番剧详细信息
+    List<AnimeData> findById(Long id);
 }

@@ -2,6 +2,7 @@ package com.ligg.mapper.anime;
 
 import com.ligg.pojo.Anime;
 import com.ligg.pojo.Episode;
+import com.ligg.pojo.data.AnimeData;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -29,4 +30,6 @@ public interface AnimeMapper {
     //删除番剧
     @Delete("delete from anime where anime_id=#{animeId}")
     int delete(Long animeId);
+    //查询番剧信息
+    List<AnimeData> findById(Long id);
 }
