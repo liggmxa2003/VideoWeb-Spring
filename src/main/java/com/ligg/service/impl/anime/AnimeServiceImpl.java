@@ -106,7 +106,6 @@ public class AnimeServiceImpl implements AnimeService {
             animeDto.setEpisodes(animeEpisodes);
         }
         Anime anime = animeMapper.findAnimeById(animeId);
-        animeDto.setAnimeId(anime.getAnimeId());
         animeDto.setTitle(anime.getTitle());
         animeDto.setCoverImage(anime.getCoverImage());
         animeDto.setDescription(anime.getDescription());

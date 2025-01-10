@@ -21,11 +21,7 @@ public class AnimeEpisodeController {
     AnimeEpisodeService animeEpisodeService;
     @Resource
     AnimeService animeService;
-//    // 番剧剧集列表
-//    @GetMapping("/{animeId}")
-//    public Result<List<AnimeEpisode>> list(@PathVariable("animeId")Long id ) {
-//        return Result.success(animeEpisodeService.list(id));
-//    }
+
     //番剧详细信息
     @GetMapping("/{animeId}")
     private Result<AnimeDto> findById(@PathVariable("animeId") Long id){

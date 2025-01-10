@@ -212,7 +212,6 @@ public class UserServiceImpl implements UserService {
                     }
                 }
             }
-
             userMapper.update(user);
         } catch (Exception e) {
             // 处理数据库查询异常
