@@ -1,5 +1,6 @@
 package com.ligg.controller.anime;
 
+import com.ligg.dto.AnimeDto;
 import com.ligg.pojo.Anime;
 import com.ligg.pojo.AnimeEpisode;
 import com.ligg.pojo.PageBean;
@@ -58,10 +59,5 @@ public class AnimeController {
         List<AnimeEpisode> episode = animeService.episode(animeId);
         return Result.success(episode);
     }
-    //番剧详细信息
-    @GetMapping("/{id}")
-    private Result<List<Anime>> findById(@PathVariable("id") Long id){
-        List<Anime> animeData = animeService.findById(id);
-        return Result.success(animeData);
-    }
+
 }

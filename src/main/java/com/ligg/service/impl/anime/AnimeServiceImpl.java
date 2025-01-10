@@ -2,6 +2,7 @@ package com.ligg.service.impl.anime;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.ligg.dto.AnimeDto;
 import com.ligg.mapper.anime.AnimeMapper;
 import com.ligg.mapper.user.UserMapper;
 import com.ligg.pojo.*;
@@ -88,9 +89,29 @@ public class AnimeServiceImpl implements AnimeService {
         animeMapper.delete(animeId);
         return Result.success();
     }
+
     // 根据id查询动漫
     @Override
     public List<Anime> findById(Long id) {
         return animeMapper.findById(id);
+    }
+    // 根据id查询动漫剧集
+    @Override
+    public AnimeDto findEpisode(Long animeId) {
+        List<AnimeEpisode> animeEpisodes = animeMapper.findEpisodeById(animeId);
+
+        // 初始化 DTO 对象
+        AnimeDto animeDto = new AnimeDto();
+        for (AnimeEpisode ignored : animeEpisodes) {
+            animeDto.setEpisodes(animeEpisodes);
+        }
+        Anime anime = animeMapper.findAnimeById(animeId);
+        animeDto.setAnimeId(anime.getAnimeId());
+        animeDto.setTitle(anime.getTitle());
+        animeDto.setCoverImage(anime.getCoverImage());
+        animeDto.setDescription(anime.getDescription());
+        animeDto.setReleaseDate(anime.getReleaseDate());
+        animeDto.setStatus(anime.getStatus());
+        return animeDto;
     }
 }

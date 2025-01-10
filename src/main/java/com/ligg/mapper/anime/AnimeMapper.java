@@ -1,5 +1,6 @@
 package com.ligg.mapper.anime;
 
+import com.ligg.dto.AnimeDto;
 import com.ligg.pojo.Anime;
 import com.ligg.pojo.AnimeEpisode;
 import org.apache.ibatis.annotations.*;
@@ -33,6 +34,8 @@ public interface AnimeMapper {
     //查询番剧信息
     List<Anime> findById(Long id);
     //查询番剧章节信息
-    @Select("select * from anime_episode where anime_id=#{animeId} order by episode_number asc")
-    List<AnimeEpisode> findEpisodeById(Long id);
+    @Select("select * from anime_episode where anime_id=#{animeId}")
+    List<AnimeEpisode> findEpisodeById(Long animeId);
+    @Select("select * from anime where anime_id=#{animeId}")
+    Anime findAnimeById(Long animeId);
 }

@@ -1,5 +1,6 @@
 package com.ligg.service;
 
+import com.ligg.dto.AnimeDto;
 import com.ligg.pojo.Anime;
 import com.ligg.pojo.AnimeEpisode;
 import com.ligg.pojo.PageBean;
@@ -24,4 +25,6 @@ public interface AnimeService {
     Result<String> delete(Long animeId);
     //查询番剧详细信息
     List<Anime> findById(Long id);
+    //查询番剧集
+    AnimeDto findEpisode(Long animeId);
 }

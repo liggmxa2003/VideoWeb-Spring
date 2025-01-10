@@ -1,4 +1,4 @@
-package com.ligg.pojo.dto;
+package com.ligg.pojo.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

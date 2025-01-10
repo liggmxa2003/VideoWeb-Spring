@@ -8,7 +8,7 @@ import java.util.List;
 
 @Mapper
 public interface AnimeEpisodeMapper {
-
+    // 剧集
     @Select("select * from anime_episode where anime_id = #{id}")
     List<AnimeEpisode> list(Long id);
 }
