@@ -14,7 +14,7 @@ public interface AnimeService {
     //轮播图
     List<Anime> Carousel();
     //发布动漫集
-    String publishEpisode(AnimeEpisode episode);
+    Result<String> publishEpisode(AnimeEpisode episode);
     //查询动漫集
     List<AnimeEpisode> episode(Long animeId);
     //番剧列表

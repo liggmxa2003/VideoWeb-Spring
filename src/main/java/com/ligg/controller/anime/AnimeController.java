@@ -1,6 +1,5 @@
 package com.ligg.controller.anime;
 
-import com.ligg.dto.AnimeDto;
 import com.ligg.pojo.Anime;
 import com.ligg.pojo.AnimeEpisode;
 import com.ligg.pojo.PageBean;
@@ -45,14 +44,14 @@ public class AnimeController {
     public Result<String> delete(@PathVariable("animeId")Long animeId){
         return animeService.delete(animeId);
     }
-    //发布动漫集数
-    @PostMapping("/episode")
-    public Result<String> publishEpisode(@RequestBody AnimeEpisode episode){
-        String a = animeService.publishEpisode(episode);
-        if (a != null)
-            return Result.error(a);
-        return Result.success();
-    }
+//    //发布动漫集数
+//    @PostMapping("/episode")
+//    public Result<String> publishEpisode(@RequestBody AnimeEpisode episode){
+//        String a = animeService.publishEpisode(episode);
+//        if (a != null)
+//            return Result.error(a);
+//        return Result.success();
+//    }
     //查询动漫集数
     @GetMapping("/episode")
     public Result<List<AnimeEpisode>> episode(@RequestParam("animeId") Long animeId){

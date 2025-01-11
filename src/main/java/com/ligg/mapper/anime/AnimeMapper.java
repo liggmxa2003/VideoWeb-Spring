@@ -1,6 +1,5 @@
 package com.ligg.mapper.anime;
 
-import com.ligg.dto.AnimeDto;
 import com.ligg.pojo.Anime;
 import com.ligg.pojo.AnimeEpisode;
 import org.apache.ibatis.annotations.*;
@@ -16,8 +15,8 @@ public interface AnimeMapper {
     @Select("select * from anime where recommend=#{recommend} order by anime_id desc")
     List<Anime> Carousel(Integer recommend);
     //发布动漫章节
-    @Insert("insert into anime_episode(anime_id,episode_title,air_date,duration,episode_number,episode_image,episode_video) " +
-            "values(#{animeId},#{title},#{airDate},#{duration},#{episodeNumber},#{episodeImage},#{episodeVideo})")
+    @Insert("insert into anime_episode(anime_id,episode_title,duration,episode_number,episode_image,episode_video,air_date) " +
+            "values(#{animeId},#{episodeTitle},#{duration},#{episodeNumber},#{episodeImage},#{episodeVideo},NOW())")
     void publishEpisode(AnimeEpisode episode);
     //获取动漫的章节
     List<AnimeEpisode> episode(Long animeId);
@@ -25,7 +24,7 @@ public interface AnimeMapper {
     @Select("select * from anime order by anime_id desc")
     List<Anime> list();
     //更新番剧信息
-    @Update("update anime set title=#{title},cover_image=#{coverImage},status=#{status},description=#{description},updated_at=NOW() " +
+    @Update("update anime set title=#{title},cover_image=#{coverImage},status=#{status},description=#{description},release_date=#{releaseDate},updated_at=NOW() " +
             "where anime_id=#{animeId}")
     void update(Anime anime);
     //删除番剧

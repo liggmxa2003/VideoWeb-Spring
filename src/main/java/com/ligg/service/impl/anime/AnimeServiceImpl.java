@@ -45,15 +45,15 @@ public class AnimeServiceImpl implements AnimeService {
 
     // 发布动漫集数
     @Override
-    public String publishEpisode(AnimeEpisode episode) {
+    public Result<String> publishEpisode(AnimeEpisode episode) {
         //判断用户是否有权限发布动漫
         Map<String, Object> map = ThreadLocalUtil.get();
         String username = (String) map.get("username");
         User user = userMapper.findByUserName(username);
         if (!Objects.equals(user.getRole(), "admin"))
-            return "用户没有权限发布动漫";
+            return Result.error("用户没有权限发布动漫");
         animeMapper.publishEpisode(episode);
-        return null;
+        return Result.success();
     }
 
     // 获取动漫集数
@@ -106,6 +106,7 @@ public class AnimeServiceImpl implements AnimeService {
             animeDto.setEpisodes(animeEpisodes);
         }
         Anime anime = animeMapper.findAnimeById(animeId);
+        animeDto.setAnimeId(anime.getAnimeId());
         animeDto.setTitle(anime.getTitle());
         animeDto.setCoverImage(anime.getCoverImage());
         animeDto.setDescription(anime.getDescription());
