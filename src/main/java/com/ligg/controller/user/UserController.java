@@ -35,7 +35,7 @@ public class UserController {
         if (s == null) {
             User u = userService.findUseInfo(user);
             //生成token
-            String userToken = userService.userToken(u.getUsername(), u.getPassword());
+            String userToken = userService.userToken(u.getUsername());
             return Result.success(userToken);
         }
         return Result.error(s);
@@ -60,15 +60,8 @@ public class UserController {
 
     //登录
     @PostMapping("/login")
-    public Result<String> login(@Pattern(regexp = "[a-z A-Z0-9]{6,15}") String username,
-                        @Pattern(regexp = "[a-z A-Z0-9]{6,15}") String password) {
-        //登录
-        String u = userService.login(username, password);
-        if (u != null)
-            return Result.error(u);
-        //生成token
-        String token = userService.userToken(username, password);
-        return Result.success(token);
+    public Result<String> login(String account,@Pattern(regexp = "[a-z A-Z0-9]{6,15}") String password) {
+        return userService.login(account, password);
     }
 
 

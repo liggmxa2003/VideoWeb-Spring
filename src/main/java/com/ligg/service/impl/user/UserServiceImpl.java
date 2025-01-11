@@ -1,6 +1,7 @@
 package com.ligg.service.impl.user;
 
 import com.ligg.mapper.user.UserMapper;
+import com.ligg.pojo.Result;
 import com.ligg.pojo.user.User;
 import com.ligg.service.User.UserService;
 import com.ligg.utils.JwtUtil;
@@ -73,16 +74,16 @@ public class UserServiceImpl implements UserService {
                 user.setNickname("昵称_" + UUID.randomUUID().toString().substring(0, 6));
                 //生成6到8个字符的随机整数
                 Random random = new Random();
-                long randomPart = (100000 + random.nextInt(900000));
+                String randomPart = String.valueOf((100000 + random.nextInt(900000)));
                 // 拼接固定整数
                 long fixedPart = 245L;
-                long userId = fixedPart * 10000000L + randomPart;
-                //判断用户id是否重复
-                while (userMapper.findById(userId) != null) {
-                    randomPart = (100000 + random.nextInt(900000));
-                    userId = fixedPart * 10000000L + randomPart;
+                String userName = fixedPart + randomPart;
+                //判断用户账号是否重复
+                while (userMapper.findByUserName(userName) != null) {
+                    randomPart = String.valueOf((100000 + random.nextInt(900000)));
+                    userName = fixedPart  + randomPart;
                 }
-                user.setId(userId);
+                user.setUsername(userName);
                 //注册用户
                 userMapper.add(user);
                 //清除Redis中的键值对
@@ -122,24 +123,32 @@ public class UserServiceImpl implements UserService {
 
     //登录校验
     @Override
-    public String login(String username, String password) {
-        User user = userMapper.findByUserName(username);
+    public Result<String> login(String account, String password) {
+        //判断Account数据中是否有@字符如果有set到email中，没有介set到username中
+        User u = new User();
+        if (account.contains("@")) {
+            u.setEmail(account);
+        } else {
+            u.setUsername(account);
+        }
+        User user = userMapper.findByUserNameOrEmail(u);
         if (user == null)
-            return "用户不存在";
+            return Result.error("用户不存在,请先注册");
         if (!Md5Util.getMD5String(password).equals(user.getPassword()))
-            return "密码错误";
-        return null;
+            return Result.error("密码错误");
+        String userToken = userToken(user.getUsername());
+        return Result.success(userToken);
     }
 
     //生成token
     @Override
-    public String userToken(String username, String password) {
+    public String userToken(String username) {
         User user = userMapper.findByUserName(username);
         Map<String, Object> claims = new HashMap<>();//存储用户信息
         claims.put("id", user.getId());
         claims.put("username", user.getUsername());
         String token = JwtUtil.genToken(claims);
-
+        //把token存储到Redis中
         ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
         operations.set(token, token, 3, TimeUnit.HOURS);//3小时
         return token;

@@ -1,5 +1,6 @@
 package com.ligg.service.User;
 
+import com.ligg.pojo.Result;
 import com.ligg.pojo.user.User;
 import com.qiniu.common.QiniuException;
 
@@ -23,9 +24,9 @@ public interface UserService {
     // 重置密码
     String updatePasswordWhereEmail(String email,String password,Integer code,String sessionId);
     // 登录校验
-    String login(String username, String password);
+    Result<String> login(String account, String password);
     //token
-    String userToken(String username, String password);
+    String userToken(String username);
     // 根据用户username获取聊天对象
     List<User> findByUserChat(String username);
     // 根据账号获取用户名

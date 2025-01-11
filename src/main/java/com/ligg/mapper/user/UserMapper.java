@@ -10,12 +10,15 @@ import java.util.List;
 
 @Mapper
 public interface UserMapper {
-    // 根据用户名查询用户
+    // 根据用户名查询用户信息
     @Select("select * from user where username=#{username}")
     User findByUserName(String username);
+    // 根据用户名或邮箱查询用户信息
+    @Select("select * from user where email=#{email} or username=#{username}")
+    User findByUserNameOrEmail(User u);
     // 注册
-    @Insert("insert into user(id,username,password,nickname,email,create_time,update_time)" +
-            "values (#{id},#{username},#{password},#{nickname},#{email},now(),now())")
+    @Insert("insert into user(username,password,nickname,email,create_time,update_time)" +
+            "values (#{username},#{password},#{nickname},#{email},now(),now())")
     void add(User user);
     // 编辑用户信息
     void update(User user);
