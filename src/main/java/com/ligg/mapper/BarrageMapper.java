@@ -10,10 +10,10 @@ import java.util.List;
 public interface BarrageMapper {
 
     // 发送弹幕
-    @Insert("insert into barrage(video_id,user_id,content,color,time_point,create_time)" +
-            " values(#{videoId},#{userId},#{content},#{color},#{timePoint},NOW())")
+    @Insert("insert into barrage(video_id,user_id,text,color,time,create_time)" +
+            " values(#{videoId},#{userId},#{text},#{color},#{time},NOW())")
     void sendBarrage(Barrage barrage);
     // 获取弹幕
-    @Select("select id,user_id,video_id,content,color,time_point,create_time from barrage where video_id=#{videoId}")
+    @Select("select id,user_id,video_id,text,color,time,create_time from barrage where video_id=#{videoId}")
     List<Barrage> getBarrage(Integer videoId);
 }
