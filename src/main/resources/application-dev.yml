@@ -27,7 +27,7 @@ spring:
       # 设置整个HTTP请求的最大大小为10MB，适应单文件或多文件上传
       max-request-size: 1000MB
 server:
-  port: 9090
+  port: 8080
 mybatis:
   configuration:
     ##开启驼峰命名

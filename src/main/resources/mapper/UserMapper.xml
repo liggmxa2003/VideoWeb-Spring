@@ -24,4 +24,15 @@
         </set>
         where id = #{id}
     </update>
+<!--    <select id="getUserInfo" resultType="com.ligg.dto.UserAndFollowAndVideoDto">-->
+<!--        select u.id, u.username, u.nickname, u.sex, u.email, u.user_pic, u.introduction,-->
+<!--               f.user_id, f.follow_user_id,-->
+<!--               v.id as videoId, v.title as videoTitle, v.cover as videoCover, v.content as videoContent, v.user_id, v.create_time as videoCreateTime-->
+<!--        from user u-->
+<!--                 left join-->
+<!--             user_follow f on f.user_id = u.id-->
+<!--                 left join-->
+<!--             video v on v.user_id = u.id-->
+<!--        where u.id = #{id}-->
+<!--    </select>-->
 </mapper>

@@ -44,4 +44,6 @@ public interface UserMapper {
     void updateUserId(Integer id, Long uId);
     @Select("select id from user where id=#{userId}")
     Integer findById(Long userId);
+    @Select("select id,username,nickname,sex,email,user_pic,introduction from user where id=#{userId}")
+    User getUserInfo(Long userId);
 }

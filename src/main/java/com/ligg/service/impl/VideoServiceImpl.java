@@ -20,7 +20,7 @@ public class VideoServiceImpl implements VideoService {
     }
     // 根据id查询视频
     @Override
-    public Video findById(Integer id) {
+    public Video findById(Long id) {
         return videoMapper.findById(id);
     }
 }

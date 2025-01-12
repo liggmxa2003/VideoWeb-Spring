@@ -24,7 +24,7 @@ public class VideoController {
     }
     //获取视频详细信息
     @GetMapping("/videoInfo")
-    public Result<Video> videoInfo(Integer id){
+    public Result<Video> videoInfo(Long id){
         Video video = videoService.findById(id);
         return Result.success(video);
     }

@@ -1,14 +1,20 @@
 package com.ligg.service.impl.user;
 
+import com.ligg.dto.UserDto;
+import com.ligg.mapper.VideoMapper;
+import com.ligg.mapper.user.UserFollowMapper;
 import com.ligg.mapper.user.UserMapper;
 import com.ligg.pojo.Result;
+import com.ligg.pojo.Video;
 import com.ligg.pojo.user.User;
+import com.ligg.pojo.user.UserFollow;
 import com.ligg.service.User.UserService;
 import com.ligg.utils.JwtUtil;
 import com.ligg.utils.Md5Util;
 import com.ligg.utils.QiNiuOssUtil;
 import com.ligg.utils.ThreadLocalUtil;
 import com.qiniu.common.QiniuException;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,8 +36,12 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     UserMapper userMapper;
-    @Autowired
+    @Resource
     MailSender mailSender;
+    @Resource
+    VideoMapper videoMapper;
+    @Resource
+    UserFollowMapper userFollowMapper;
     @Autowired
     StringRedisTemplate stringRedisTemplate;
     @Value("${spring.mail.username}")
@@ -197,6 +207,31 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    //根据用户username获取用户信息
+    @Override
+    public UserDto findByUseInfo(Long userId) {
+        //new数组接收数据
+        User userInfo = userMapper.getUserInfo(userId);
+
+        UserDto userDto = new UserDto();
+
+        userDto.setUsername(userInfo.getUsername());
+        userDto.setNickname(userInfo.getNickname());
+        userDto.setSex(userInfo.getSex());
+        userDto.setEmail(userInfo.getEmail());
+        userDto.setIntroduction(userInfo.getIntroduction());
+        userDto.setUserPic(userInfo.getUserPic());
+
+        List<Video> userVideos = videoMapper.findVideoByUserId(userId);
+        for (Video ignored : userVideos) {
+            userDto.setUserVideos(userVideos);
+        }
+        List<UserFollow> userFollows = userFollowMapper.followList(userInfo.getId());
+        for (UserFollow ignored : userFollows){
+            userDto.setUserFollows(userFollows);
+        }
+        return userDto;
+    }
 
     // 修改用户信息
     @Override

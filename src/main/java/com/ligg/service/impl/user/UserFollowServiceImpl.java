@@ -47,7 +47,7 @@ public class UserFollowServiceImpl implements UserFollowService {
     @Override
     public List<UserFollowData> followList() {
         Map<String,Object> map = ThreadLocalUtil.get();
-        Integer id = (Integer) map.get("id");
-        return userFollowMapper.followList(id);
+        Long id = (Long) map.get("id");
+        return userFollowMapper.getUserFollow(id);
     }
 }

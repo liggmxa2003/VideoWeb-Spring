@@ -1,5 +1,6 @@
 package com.ligg.service.User;
 
+import com.ligg.dto.UserDto;
 import com.ligg.pojo.Result;
 import com.ligg.pojo.user.User;
 import com.qiniu.common.QiniuException;
@@ -33,4 +34,5 @@ public interface UserService {
     String findUsername(String username);
     // 删除token
     void deleteToken();
+    UserDto findByUseInfo(Long userId);
 }

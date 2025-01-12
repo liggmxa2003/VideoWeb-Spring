@@ -1,5 +1,6 @@
 package com.ligg.controller.user;
 
+import com.ligg.dto.UserDto;
 import com.ligg.pojo.Result;
 import com.ligg.pojo.user.User;
 import com.ligg.service.User.UserService;
@@ -14,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 //用户接口
@@ -96,6 +99,12 @@ public class UserController {
         //删除token
         userService.deleteToken();
         return Result.success();
+    }
+    //用户信息
+    @GetMapping("/userInfo/{userId}")
+    public Result<UserDto> userInfo(@PathVariable("userId") Long userId) {
+        UserDto userInfoDto = userService.findByUseInfo(userId);
+        return Result.success(userInfoDto);
     }
    /* //修改密码
     @PatchMapping("/updatePassword")
