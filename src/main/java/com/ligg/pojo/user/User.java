@@ -20,7 +20,7 @@ public class User {
     private Long id;//主键ID
     private String username;//用户名
     @JsonIgnore//忽略
-    @Pattern(regexp = "")//2-10位非空字符
+    @Pattern(regexp = "^\\S{2,13}$")//2-13位非空字符
     private String password;//密码
     @NotEmpty(groups = User.Update.class)
     @Pattern(regexp = "^\\S{2,13}$")//2-10位非空字符
