@@ -1,5 +1,4 @@
 ##开发环境一
-
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -40,13 +39,13 @@ logging:
     com.ligg.mapper: debug
 # 七牛云配置
 qiniu:
-  access-key: t5C9G5fTBUfkenBBCKeQI2W4B00mDP6SL1-7WqQW
-  secret-key: rNVfHfI4l_LHkpRSWdMIdcXoIXhuQVq-9xgNhqZX
+  access-key: ${QINIU_ACCESS_KEY}
+  secret-key: ${QINIU_SECRET_KEY}
   bucket-name: videoplusligg
   domain: http://sowl9rtuo.hn-bkt.clouddn.com/ #域名
   video-path: videos/ # 新增的视频文件存储路径或前缀
 
 bangumi:
-  client-id: bgm34586768ae15029bd
-  clinet-secret: 91c137068032226c437c3b4590e3a0dd
+  client-id: ${BANGUMI_CLIENT_ID}
+  clinet-secret: ${BANGUMI_CLIENT_SECRET}
   redirect-uri: http://127.0.0.1:5501

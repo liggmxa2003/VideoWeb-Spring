@@ -10,12 +10,9 @@ import java.util.Map;
 // Bangumi OAuth2.0 服务
 @Service
 public class BangumiOAuthService {
-    @Value("${bangumi.client-id}")
-    private String clientId;//客户端id
-    @Value("${bangumi.clinet-secret}")
-    private String clientSecret;//客户端密钥
-    @Value("${bangumi.redirect-uri}")
-    private String redirectUri;//重定向地址
+    private final String clientId=null;//客户端id
+    private final String clientSecret=null;//客户端密钥
+    private final String redirectUri=null;//重定向地址
 
     private final RestTemplate restTemplate = new RestTemplate();// 用于发起 HTTP 请求
 
