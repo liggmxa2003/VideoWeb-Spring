@@ -4,6 +4,7 @@ import com.ligg.dto.UserDto;
 import com.ligg.pojo.Result;
 import com.ligg.pojo.user.User;
 import com.ligg.service.User.UserService;
+import com.ligg.utils.ThreadLocalUtil;
 import com.qiniu.common.QiniuException;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.constraints.Email;
@@ -17,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 
 //用户接口
@@ -63,7 +65,7 @@ public class UserController {
 
     //登录
     @PostMapping("/login")
-    public Result<String> login(String account,@Pattern(regexp = "[a-z A-Z0-9]{6,15}") String password) {
+    public Result<String> login(String account, @Pattern(regexp = "[a-z A-Z0-9]{6,15}") String password) {
         return userService.login(account, password);
     }
 
@@ -100,12 +102,22 @@ public class UserController {
         userService.deleteToken();
         return Result.success();
     }
-    //用户信息
-    @GetMapping("/userInfo/{userId}")
-    public Result<UserDto> userInfo(@PathVariable("userId") Long userId) {
-        UserDto userInfoDto = userService.findByUseInfo(userId);
+
+    //用户首页
+    @GetMapping("/homeList")
+    public Result<UserDto> userInfoList(@RequestParam(required = false) String username) {
+        if (username == null) {
+            Map<String, Object> map = ThreadLocalUtil.get();
+            String user = (String) map.get("username");
+            UserDto userInfoDto = userService.getUserHomeList(user);
+            return Result.success(userInfoDto);
+        }
+        UserDto userInfoDto = userService.getUserHomeList(username);
         return Result.success(userInfoDto);
     }
+
+
+
    /* //修改密码
     @PatchMapping("/updatePassword")
     public Result<String> updatePassword(@RequestBody Map<String, String> params, @RequestHeader("Authorization") String token) {
@@ -138,6 +150,4 @@ public class UserController {
         operations.getOperations().delete(token);
         return Result.success();
     }*/
-
-
 }

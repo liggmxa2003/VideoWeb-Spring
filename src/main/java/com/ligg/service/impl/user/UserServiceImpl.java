@@ -91,7 +91,7 @@ public class UserServiceImpl implements UserService {
                 //判断用户账号是否重复
                 while (userMapper.findByUserName(userName) != null) {
                     randomPart = String.valueOf((100000 + random.nextInt(900000)));
-                    userName = fixedPart  + randomPart;
+                    userName = fixedPart + randomPart;
                 }
                 user.setUsername(userName);
                 //注册用户
@@ -207,14 +207,13 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    //根据用户username获取用户信息
+    //获取用户首页数据
     @Override
-    public UserDto findByUseInfo(Long userId) {
+    public UserDto getUserHomeList(String username) {
+
+        User userInfo = userMapper.getUserInfo(username);
         //new数组接收数据
-        User userInfo = userMapper.getUserInfo(userId);
-
         UserDto userDto = new UserDto();
-
         userDto.setUsername(userInfo.getUsername());
         userDto.setNickname(userInfo.getNickname());
         userDto.setSex(userInfo.getSex());
@@ -222,16 +221,17 @@ public class UserServiceImpl implements UserService {
         userDto.setIntroduction(userInfo.getIntroduction());
         userDto.setUserPic(userInfo.getUserPic());
 
-        List<Video> userVideos = videoMapper.findVideoByUserId(userId);
+        List<Video> userVideos = videoMapper.findVideoByUserId(userInfo.getId());
         for (Video ignored : userVideos) {
-            userDto.setUserVideos(userVideos);
+            userDto.setVideos(userVideos);
         }
         List<UserFollow> userFollows = userFollowMapper.followList(userInfo.getId());
-        for (UserFollow ignored : userFollows){
-            userDto.setUserFollows(userFollows);
+        for (UserFollow ignored : userFollows) {
+            userDto.setFollows(userFollows);
         }
         return userDto;
     }
+
 
     // 修改用户信息
     @Override

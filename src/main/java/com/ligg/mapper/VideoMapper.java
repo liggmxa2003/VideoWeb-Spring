@@ -12,6 +12,7 @@ public interface VideoMapper {
     List<Video> list();
     // 根据id查询视频和用户信息
     Video findById(Long id);
+    // 根据用户id查询视频
     @Select("select id,title,cover,content,video_url,create_time from video where user_id=#{userId}")
     List<Video> findVideoByUserId(Long userId);
 }
