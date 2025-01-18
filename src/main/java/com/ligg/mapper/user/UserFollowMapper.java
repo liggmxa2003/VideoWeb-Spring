@@ -24,5 +24,8 @@ public interface UserFollowMapper {
     // 查询关注列表
     @Select("select follow_user_id,create_time from user_follow where follow_user_id = #{id}")
     List<UserFollow> followList(Long id);
+    // 查询关注
+    @Select("select count(id) from user where id = #{id}")
+    int findByUsername(Long id);
     List<UserFollowData> getUserFollow(Long id);
 }

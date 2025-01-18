@@ -64,7 +64,9 @@ public class UserController {
 
     //登录
     @PostMapping("/login")
-    public Result<String> login(String account, @Pattern(regexp = "[a-z A-Z0-9]{6,15}") String password) {
+    public Result<String> login(String account,
+                                @Pattern(regexp = "[a-z A-Z0-9]{6,15}") String password) {
+
         return userService.login(account, password);
     }
 
@@ -102,7 +104,7 @@ public class UserController {
         return Result.success();
     }
 
-    //用户首页
+    //用户首页信息
     @GetMapping("/homeList")
     public Result<UserDto> userInfoList(@RequestParam(required = false) String username) {
         if (username == null) {
