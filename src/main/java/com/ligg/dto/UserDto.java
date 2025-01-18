@@ -19,6 +19,9 @@ public class UserDto {
     private String introduction;//用户简介
     private String email;
     private String userPic;
+    private int followCount;//用户关注数
+    private int fansCount;//用户粉丝数
+    private int videoCount;//用户视频数
     private List<UserFollow> Follows;//用户关注
     private List<Video> Videos;//用户视频
 }

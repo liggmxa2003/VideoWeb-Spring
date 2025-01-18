@@ -28,4 +28,13 @@ public interface UserFollowMapper {
     @Select("select count(id) from user where id = #{id}")
     int findByUsername(Long id);
     List<UserFollowData> getUserFollow(Long id);
+    // 查询关注数
+    @Select("select count(id) from user_follow where user_id = #{id}")
+    int followCount(Long id);
+    // 查询粉丝数
+    @Select("select count(id) from user_follow where follow_user_id = #{id}")
+    int fansCount(Long id);
+    // 查询用户视频数
+    @Select("select count(id) from video where user_id = #{id}")
+    int videoCount(Long id);
 }

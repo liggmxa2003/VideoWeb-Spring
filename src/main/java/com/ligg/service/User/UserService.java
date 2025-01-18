@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface UserService {
     // 根据用户名查询用户
-    User findByUsername();
+    UserDto findByUsername();
 
     User findUseInfo(User user);
 

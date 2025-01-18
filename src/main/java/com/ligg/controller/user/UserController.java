@@ -73,10 +73,10 @@ public class UserController {
 
     // 获取用户信息
     @GetMapping("/userInfo")
-    public Result<User> userInfo() {
+    public Result<UserDto> userInfo() {
         //查询用户
-        User user = userService.findByUsername();
-        return Result.success(user);
+        UserDto userDto = userService.findByUsername();
+        return Result.success(userDto);
     }
 
     //更新用户信息

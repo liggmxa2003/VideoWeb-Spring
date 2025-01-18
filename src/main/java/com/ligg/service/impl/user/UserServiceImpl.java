@@ -49,10 +49,17 @@ public class UserServiceImpl implements UserService {
 
     //根据查询用户名查询用户
     @Override
-    public User findByUsername() {
+    public UserDto findByUsername() {
         Map<String, Object> map = ThreadLocalUtil.get();
         String username = (String) map.get("username");
-        return userMapper.findByUserName(username);
+        User byUserName = userMapper.findByUserName(username);
+        UserDto userDto = new UserDto();
+        userDto.setId(byUserName.getId());
+        userDto.setNickname(byUserName.getNickname());
+        userDto.setUserPic(byUserName.getUserPic());
+        userDto.setFollowCount(userFollowMapper.followCount(byUserName.getId()));
+        userDto.setFansCount(userFollowMapper.fansCount(byUserName.getId()));
+        return userDto;
     }
 
     //根据用户名查询用户信息
@@ -220,6 +227,11 @@ public class UserServiceImpl implements UserService {
         userDto.setEmail(userInfo.getEmail());
         userDto.setIntroduction(userInfo.getIntroduction());
         userDto.setUserPic(userInfo.getUserPic());
+
+        //关注数、粉丝、视频数数据
+        userDto.setFollowCount(userFollowMapper.followCount(userInfo.getId()));
+        userDto.setFansCount(userFollowMapper.fansCount(userInfo.getId()));
+        userDto.setVideoCount(userFollowMapper.videoCount(userInfo.getId()));
 
         List<Video> userVideos = videoMapper.findVideoByUserId(userInfo.getId());
         for (Video ignored : userVideos) {
