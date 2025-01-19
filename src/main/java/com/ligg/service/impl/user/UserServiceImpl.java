@@ -1,5 +1,6 @@
 package com.ligg.service.impl.user;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ligg.dto.UserDto;
 import com.ligg.mapper.VideoMapper;
 import com.ligg.mapper.user.UserFollowMapper;
@@ -18,6 +19,7 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.mail.MailException;
@@ -42,23 +44,46 @@ public class UserServiceImpl implements UserService {
     VideoMapper videoMapper;
     @Resource
     UserFollowMapper userFollowMapper;
+
     @Autowired
     StringRedisTemplate stringRedisTemplate;
     @Value("${spring.mail.username}")
     String from;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     //根据查询用户名查询用户
     @Override
     public UserDto findByUsername() {
         Map<String, Object> map = ThreadLocalUtil.get();
         String username = (String) map.get("username");
+
+        // 尝试从Redis中获取用户信息
+        String userJson = stringRedisTemplate.opsForValue().get("user:" + username);
+        if (userJson != null) {
+            try {
+                return objectMapper.readValue(userJson, UserDto.class);
+            } catch (Exception e) {
+                log.error("无法从 Redis 反序列化 user", e);
+            }
+        }
+        // 如果Redis中没有，从数据库中查询
         User byUserName = userMapper.findByUserName(username);
         UserDto userDto = new UserDto();
         userDto.setId(byUserName.getId());
+        userDto.setRole(byUserName.getRole());
+        userDto.setUsername(byUserName.getUsername());
         userDto.setNickname(byUserName.getNickname());
         userDto.setUserPic(byUserName.getUserPic());
         userDto.setFollowCount(userFollowMapper.followCount(byUserName.getId()));
         userDto.setFansCount(userFollowMapper.fansCount(byUserName.getId()));
+        // 将查询结果存入Redis，设置过期时间为1小时
+        try {
+            stringRedisTemplate.opsForValue().set("user:" + username, objectMapper.writeValueAsString(userDto), 1, TimeUnit.HOURS);
+        } catch (Exception e) {
+            log.error("无法将用户序列化到 Redis", e);
+        }
         return userDto;
     }
 
@@ -300,9 +325,12 @@ public class UserServiceImpl implements UserService {
      * 4.如果发送失败把把Redis中邮箱和验证码删除
      * 5.用户注册时，再把Redis里的键值对取出对比
      */
-    //发送验证码
+//发送验证码
     @Override
     public String sendValidateCode(String email, String sessionId, boolean hasUsername) {
+        if (email.isEmpty()) {
+            return "邮箱不能为空";
+        }
         String key = "email" + sessionId + ":" + email + ":" + hasUsername;
         if (Boolean.TRUE.equals(stringRedisTemplate.hasKey(key))) {
             Long expire = Optional.ofNullable(stringRedisTemplate.getExpire(key, TimeUnit.SECONDS)).orElse(0L);
