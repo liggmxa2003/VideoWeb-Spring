@@ -160,7 +160,7 @@ public class UserServiceImpl implements UserService {
             return "先获取验证码";
     }
 
-    //登录校验
+    //校验登录
     @Override
     public Result<String> login(String account, String password) {
         //判断Account数据中是否有@字符如果有set到email中，没有介set到username中

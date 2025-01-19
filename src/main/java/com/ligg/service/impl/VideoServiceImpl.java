@@ -37,7 +37,7 @@ public class VideoServiceImpl implements VideoService {
         }
         List<Video> list = videoMapper.list();
         try {
-            redisTemplate.opsForValue().set("video", objectMapper.writeValueAsString(list), 1, TimeUnit.HOURS);
+            redisTemplate.opsForValue().set("video", objectMapper.writeValueAsString(list), 20, TimeUnit.SECONDS);
         } catch (Exception e) {
             log.error("查询视频失败: {}", e.getMessage());
         }
