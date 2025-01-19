@@ -47,11 +47,11 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     StringRedisTemplate stringRedisTemplate;
+    @Autowired
+    ObjectMapper objectMapper;
     @Value("${spring.mail.username}")
     String from;
 
-    @Autowired
-    private ObjectMapper objectMapper;
 
     //根据查询用户名查询用户
     @Override
