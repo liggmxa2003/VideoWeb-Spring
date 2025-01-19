@@ -20,7 +20,7 @@ public class BarrageServiceImpl implements BarrageService {
     @Override
     public String sendBarrage(Barrage barrage) {
         Map<String, Object> map = ThreadLocalUtil.get();
-        barrage.setUserId((Integer) map.get("id"));
+        barrage.setUserId((Long) map.get("id"));
         barrageMapper.sendBarrage(barrage);
         return null;
     }

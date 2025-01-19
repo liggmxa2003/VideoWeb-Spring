@@ -30,14 +30,14 @@ public class UserVideoController {
     }
     //发布用户视频
     @PostMapping
-    public Result add(@RequestBody @Validated(Video.Add.class) Video video){
+    public Result<String> add(@RequestBody @Validated(Video.Add.class) Video video){
         //发布视频
         userVideoService.add(video);
         return Result.success();
     }
     //编辑用户是视频
     @PutMapping
-    public Result update(@RequestBody @Validated(Video.Update.class) Video userVideo){
+    public Result<String> update(@RequestBody @Validated(Video.Update.class) Video userVideo){
         Boolean u = userVideoService.listByUserId(userVideo);
         if (!u)
             return Result.error("您没有权限编辑该视频信息");
