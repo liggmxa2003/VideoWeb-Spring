@@ -289,7 +289,7 @@ public class UserServiceImpl implements UserService {
         if (map == null || map.get("id") == null || map.get("username") == null) {
             throw new IllegalArgumentException("Required parameters are missing in ThreadLocalUtil");
         }
-        user.setId(Long.valueOf((Integer) map.get("id")));
+        user.setId((Long) map.get("id"));
         user.setUsername((String) map.get("username"));
         try {
             User oldAvatarUrl = userMapper.findByUserName(user.getUsername());
@@ -305,6 +305,8 @@ public class UserServiceImpl implements UserService {
                 }
             }
             userMapper.update(user);
+           //删除Redis中用户信息
+            stringRedisTemplate.delete("user:" + user.getUsername());
         } catch (Exception e) {
             // 处理数据库查询异常
             throw new QiniuException(e, "更新用户或查找旧头像失败");
