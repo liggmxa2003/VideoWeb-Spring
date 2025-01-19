@@ -64,7 +64,7 @@ public class UserController {
 
     //登录
     @PostMapping("/login")
-    public Result<String> login(String account,
+    public Result<String> login(@RequestParam String account,
                                 @Pattern(regexp = "[a-z A-Z0-9]{6,15}") String password) {
 
         return userService.login(account, password);
