@@ -22,7 +22,7 @@ public class UserFollowServiceImpl implements UserFollowService {
     @Override
     public Result<String> follow(Long id, Boolean isFollow) {
         Map<String, Object> map = ThreadLocalUtil.get();
-        Integer userId = (Integer) map.get("id");
+        Long userId = (Long) map.get("id");
         if (userId.longValue() == id){
             return Result.error("不能关注自己");
         }
@@ -45,7 +45,7 @@ public class UserFollowServiceImpl implements UserFollowService {
     @Override
     public List<UserFollow> list(Long id) {
         Map<String, Object> map = ThreadLocalUtil.get();
-        Integer userId = (Integer) map.get("id");
+        Long userId = (Long) map.get("id");
         return userFollowMapper.list(userId, id);
     }
 
