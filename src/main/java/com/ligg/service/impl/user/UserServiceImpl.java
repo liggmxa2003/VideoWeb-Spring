@@ -19,7 +19,6 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.mail.MailException;
@@ -44,14 +43,12 @@ public class UserServiceImpl implements UserService {
     VideoMapper videoMapper;
     @Resource
     UserFollowMapper userFollowMapper;
-
     @Autowired
     StringRedisTemplate stringRedisTemplate;
     @Autowired
     ObjectMapper objectMapper;
     @Value("${spring.mail.username}")
     String from;
-
 
     //根据查询用户名查询用户
     @Override
@@ -242,7 +239,16 @@ public class UserServiceImpl implements UserService {
     //获取用户首页数据
     @Override
     public UserDto getUserHomeList(String username) {
-
+        //尝试从Redis中获取用户信息
+        String userInfoJson = stringRedisTemplate.opsForValue().get("userInfo:" + username);
+        if (userInfoJson != null) {
+            try {
+                return objectMapper.readValue(userInfoJson, UserDto.class);
+            } catch (Exception e) {
+                log.error("获取用户首页数据失败: {}", e.getMessage());
+            }
+        }
+        //如果Redis中没有数据，则从数据库中获取数据并保存到Redis中
         User userInfo = userMapper.getUserInfo(username);
         //new数组接收数据
         UserDto userDto = new UserDto();
@@ -265,6 +271,11 @@ public class UserServiceImpl implements UserService {
         List<UserFollow> userFollows = userFollowMapper.followList(userInfo.getId());
         for (UserFollow ignored : userFollows) {
             userDto.setFollows(userFollows);
+        }
+        try {
+            stringRedisTemplate.opsForValue().set("userInfo:" + username, objectMapper.writeValueAsString(userDto), 1, TimeUnit.HOURS);
+        } catch (Exception e) {
+            log.error("获取用户首页数据失败: {}", e.getMessage());
         }
         return userDto;
     }
