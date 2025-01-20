@@ -24,7 +24,7 @@ public class CommentsServiceImpl implements CommentsService {
         }
         Comments comment = new Comments();
         comment.setVideoId(id);
-        comment.setUserId((Integer) map.get("id"));
+        comment.setUserId((Long) map.get("id"));
         comment.setContent(comments);
         commentsMapper.publish(comment);
         return null;

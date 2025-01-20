@@ -1,6 +1,7 @@
 package com.ligg.service.User;
 
 import com.ligg.pojo.PageBean;
+import com.ligg.pojo.Result;
 import com.ligg.pojo.Video;
 
 public interface UserVideoService {
@@ -15,5 +16,7 @@ public interface UserVideoService {
     //用户视频信息校验
     Boolean listByUserId(Video userVideo);
     // 根据id查询
-    boolean findById(Video userVideo);
+    boolean findById(Integer id);
+    // 视频点赞
+    Result<String> videoLike(Integer videoId);
 }

@@ -2,11 +2,11 @@ package com.ligg.controller;
 
 import com.ligg.pojo.Result;
 import com.ligg.pojo.Video;
+import com.ligg.pojo.VideoLike;
 import com.ligg.service.VideoService;
+import org.apache.ibatis.annotations.Insert;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,8 +24,14 @@ public class VideoController {
     }
     //获取视频详细信息
     @GetMapping("/videoInfo")
-    public Result<Video> videoInfo(Long id){
+    public Result<Video> videoInfo(Integer id){
         Video video = videoService.findById(id);
         return Result.success(video);
+    }
+    //视频点赞数
+    @GetMapping("/videoLike/{videoId}")
+    public Result<Integer> videoLike(@PathVariable("videoId") Integer videoId){
+        Integer like = videoService.findVideoLikeById(videoId);
+        return Result.success(like);
     }
 }

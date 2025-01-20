@@ -4,7 +4,7 @@ import com.ligg.pojo.PageBean;
 import com.ligg.pojo.Result;
 import com.ligg.pojo.Video;
 import com.ligg.service.User.UserVideoService;
-import com.ligg.utils.QiNiuOssUtil;
+import com.ligg.service.VideoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +16,8 @@ public class UserVideoController {
 
     @Autowired
     UserVideoService userVideoService;
-
+    @Autowired
+    VideoService videoService;
     //分页查询用户视频信息列表
     @GetMapping
     public Result<PageBean<Video>> list(
@@ -47,12 +48,27 @@ public class UserVideoController {
     //删除视用户视频信息
     @DeleteMapping
     public Result<Video> delete(Video userVideo){
-        if (!userVideoService.findById(userVideo))
+        if (!userVideoService.findById(userVideo.getId()))
             return Result.error("该视频已经不存在");
         Boolean u = userVideoService.listByUserId(userVideo);
         if (!u)
             return Result.error("您没有权限编辑该视频信息");
         userVideoService.delete(userVideo);
+        return Result.success();
+    }
+    // TODO 视频点赞
+    @PutMapping("/videoLike/{videoId}")
+    public Result<String> videoLike(@PathVariable("videoId") Integer videoId){
+        return userVideoService.videoLike(videoId);
+    }
+    //TODO 视频收藏
+    @PutMapping("/videoCollection/{videoId}")
+    public Result<Video> videoCollection(@PathVariable("videoId") Long videoId){
+        return Result.success();
+    }
+    //TODO 视频投币
+    @PutMapping("/videoCoin")
+    public Result<Video> videoCoin(Long id){
         return Result.success();
     }
 }

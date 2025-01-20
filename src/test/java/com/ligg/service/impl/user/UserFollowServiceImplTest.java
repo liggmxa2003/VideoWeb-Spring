@@ -3,7 +3,6 @@ package com.ligg.service.impl.user;
 import com.ligg.mapper.user.UserFollowMapper;
 import com.ligg.pojo.Result;
 import com.ligg.pojo.user.UserFollow;
-import com.ligg.service.User.UserFollowService;
 import com.ligg.utils.ThreadLocalUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -57,12 +57,12 @@ public class UserServiceImpl implements UserService {
         String username = (String) map.get("username");
 
         // 尝试从Redis中获取用户信息
-        String userJson = stringRedisTemplate.opsForValue().get("user:" + username);
+        String userJson = stringRedisTemplate.opsForValue().get("userInfo:" + username);
         if (userJson != null) {
             try {
                 return objectMapper.readValue(userJson, UserDto.class);
             } catch (Exception e) {
-                log.error("无法从 Redis 反序列化 user", e);
+                log.error("无法从 Redis 反序列化 userInfo", e);
             }
         }
         // 如果Redis中没有，从数据库中查询
@@ -70,14 +70,16 @@ public class UserServiceImpl implements UserService {
         UserDto userDto = new UserDto();
         userDto.setId(byUserName.getId());
         userDto.setRole(byUserName.getRole());
+        userDto.setEmail(byUserName.getEmail());
         userDto.setUsername(byUserName.getUsername());
         userDto.setNickname(byUserName.getNickname());
         userDto.setUserPic(byUserName.getUserPic());
+        userDto.setCreateTime(byUserName.getCreateTime());
         userDto.setFollowCount(userFollowMapper.followCount(byUserName.getId()));
         userDto.setFansCount(userFollowMapper.fansCount(byUserName.getId()));
         // 将查询结果存入Redis，设置过期时间为1小时
         try {
-            stringRedisTemplate.opsForValue().set("user:" + username, objectMapper.writeValueAsString(userDto), 1, TimeUnit.HOURS);
+            stringRedisTemplate.opsForValue().set("userInfo:" + username, objectMapper.writeValueAsString(userDto), 20, TimeUnit.MINUTES);
         } catch (Exception e) {
             log.error("无法将用户序列化到 Redis", e);
         }
@@ -240,7 +242,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getUserHomeList(String username) {
         //尝试从Redis中获取用户信息
-        String userInfoJson = stringRedisTemplate.opsForValue().get("userInfo:" + username);
+        String userInfoJson = stringRedisTemplate.opsForValue().get("userHome:" + username);
         if (userInfoJson != null) {
             try {
                 return objectMapper.readValue(userInfoJson, UserDto.class);
@@ -273,7 +275,7 @@ public class UserServiceImpl implements UserService {
             userDto.setFollows(userFollows);
         }
         try {
-            stringRedisTemplate.opsForValue().set("userInfo:" + username, objectMapper.writeValueAsString(userDto), 1, TimeUnit.HOURS);
+            stringRedisTemplate.opsForValue().set("userHome:" + username, objectMapper.writeValueAsString(userDto), 1, TimeUnit.HOURS);
         } catch (Exception e) {
             log.error("获取用户首页数据失败: {}", e.getMessage());
         }

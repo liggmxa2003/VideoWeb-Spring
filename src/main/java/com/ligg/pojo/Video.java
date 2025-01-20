@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Video {
     @NotNull(groups = Video.Update.class)
-    private Long id;//id
+    private Integer id;//id
     @NotEmpty
     @Pattern(regexp = "^\\S{2,20}$")
     private String title;//标题
@@ -29,6 +29,8 @@ public class Video {
     @NotEmpty
     private String content;//视频介绍
     private String videoUrl;//视频地址
+    private Integer VideoLikeCount;//点赞数
+    private Integer videoFavorite;//收藏数
     private LocalDateTime createTime;//发布时间
     private LocalDateTime updateTime;//更新时间
     // 分组校验,更新组

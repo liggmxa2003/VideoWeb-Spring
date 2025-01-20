@@ -27,7 +27,7 @@ public class VideoServiceImpl implements VideoService {
     @Override
     public List<Video> list() {
         //从Redis中查询
-        String video = redisTemplate.opsForValue().get("video");
+        String video = redisTemplate.opsForValue().get("videHome");
         if (video != null) {
             try {
                 return objectMapper.readValue(video, objectMapper.getTypeFactory().constructCollectionType(List.class, Video.class));
@@ -37,7 +37,7 @@ public class VideoServiceImpl implements VideoService {
         }
         List<Video> list = videoMapper.list();
         try {
-            redisTemplate.opsForValue().set("video", objectMapper.writeValueAsString(list), 20, TimeUnit.SECONDS);
+            redisTemplate.opsForValue().set("videHome", objectMapper.writeValueAsString(list), 20, TimeUnit.SECONDS);
         } catch (Exception e) {
             log.error("查询视频失败: {}", e.getMessage());
         }
@@ -46,7 +46,12 @@ public class VideoServiceImpl implements VideoService {
 
     // 根据id查询视频
     @Override
-    public Video findById(Long id) {
+    public Video findById(Integer id) {
         return videoMapper.findById(id);
+    }
+    // 根据视频id查询点赞数
+    @Override
+    public Integer findVideoLikeById(Integer videoId) {
+        return videoMapper.findVideoLikeById(videoId);
     }
 }

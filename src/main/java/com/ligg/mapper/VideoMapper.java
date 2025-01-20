@@ -1,6 +1,8 @@
 package com.ligg.mapper;
 
 import com.ligg.pojo.Video;
+import com.ligg.pojo.VideoLike;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -11,8 +13,14 @@ public interface VideoMapper {
     // 查询所有视频
     List<Video> list();
     // 根据id查询视频和用户信息
-    Video findById(Long id);
+    Video findById(Integer id);
     // 根据用户id查询视频
     @Select("select id,title,cover,content,video_url,create_time from video where user_id=#{userId}")
     List<Video> findVideoByUserId(Long userId);
+    // 点赞
+    @Insert("insert video_like set video_id=#{videoId},user_id=#{userId}")
+    void videoLike(Integer videoId, Long userId);
+    // 查询点赞数
+    @Select("select count(id) from video_like where video_id=#{videoId}")
+    Integer findVideoLikeById(Integer videoId);
 }

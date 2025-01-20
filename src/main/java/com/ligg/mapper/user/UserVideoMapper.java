@@ -24,8 +24,11 @@ public interface UserVideoMapper {
     List<Video> listByUserId(Video userVideo);
     // 根据视频id查询视频信息
     @Select("select * from video where id=#{id}")
-    Video findById(Video userVideo);
+    Video findById(Integer id);
     //根据id删除视频信息
     @Delete("delete from video where id=#{id}")
     void delete(Video userVideo);
+    // 根据视频id查询点赞数
+    @Select("select count(id) from video_like where video_id=#{videoId}")
+    Integer findVideoLikeById(Integer videoId);
 }

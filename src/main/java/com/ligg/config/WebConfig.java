@@ -29,6 +29,7 @@ public class WebConfig implements WebMvcConfigurer {
 
         // 请求截器
         registry.addInterceptor(rateLimitInterceptor)
+                .order(2)
                 .addPathPatterns("/**");
     }
 
