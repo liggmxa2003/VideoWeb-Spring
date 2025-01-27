@@ -29,8 +29,9 @@ public class Video {
     @NotEmpty
     private String content;//视频介绍
     private String videoUrl;//视频地址
-    private Integer VideoLikeCount;//点赞数
-    private Integer videoFavorite;//收藏数
+    private Integer likesCount;//点赞数
+    private boolean UserLike = false;//是否点赞
+    private Integer favorite;//收藏数
     private LocalDateTime createTime;//发布时间
     private LocalDateTime updateTime;//更新时间
     // 分组校验,更新组

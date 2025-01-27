@@ -70,9 +70,11 @@ public class UserServiceImpl implements UserService {
         UserDto userDto = new UserDto();
         userDto.setId(byUserName.getId());
         userDto.setRole(byUserName.getRole());
+        userDto.setSex(byUserName.getSex());
         userDto.setEmail(byUserName.getEmail());
         userDto.setUsername(byUserName.getUsername());
         userDto.setNickname(byUserName.getNickname());
+        userDto.setIntroduction(byUserName.getIntroduction());
         userDto.setUserPic(byUserName.getUserPic());
         userDto.setCreateTime(byUserName.getCreateTime());
         userDto.setFollowCount(userFollowMapper.followCount(byUserName.getId()));
@@ -308,7 +310,7 @@ public class UserServiceImpl implements UserService {
             }
             userMapper.update(user);
            //删除Redis中用户信息
-            stringRedisTemplate.delete("user:" + user.getUsername());
+            stringRedisTemplate.delete("userInfo:" + user.getUsername());
         } catch (Exception e) {
             // 处理数据库查询异常
             throw new QiniuException(e, "更新用户或查找旧头像失败");

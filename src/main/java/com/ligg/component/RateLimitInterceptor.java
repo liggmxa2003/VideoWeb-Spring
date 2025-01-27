@@ -17,7 +17,7 @@ public class RateLimitInterceptor implements HandlerInterceptor {
 
     public RateLimitInterceptor() {
         RateLimiterConfig config = RateLimiterConfig.custom()
-                .limitForPeriod(10)
+                .limitForPeriod(100)
                 // 限制刷新周期为1秒，以减少刷新频率并避免过度使用资源
                 .limitRefreshPeriod(Duration.ofSeconds(2))
                 .timeoutDuration(Duration.ZERO)

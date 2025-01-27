@@ -2,9 +2,7 @@ package com.ligg.controller;
 
 import com.ligg.pojo.Result;
 import com.ligg.pojo.Video;
-import com.ligg.pojo.VideoLike;
 import com.ligg.service.VideoService;
-import org.apache.ibatis.annotations.Insert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +26,7 @@ public class VideoController {
         Video video = videoService.findById(id);
         return Result.success(video);
     }
-    //视频点赞数
+    //视频点赞数、收藏
     @GetMapping("/videoLike/{videoId}")
     public Result<Integer> videoLike(@PathVariable("videoId") Integer videoId){
         Integer like = videoService.findVideoLikeById(videoId);

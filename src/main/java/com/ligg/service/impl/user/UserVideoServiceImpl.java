@@ -10,7 +10,6 @@ import com.ligg.pojo.Video;
 import com.ligg.service.User.UserVideoService;
 import com.ligg.utils.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -97,20 +96,32 @@ public class UserVideoServiceImpl implements UserVideoService {
         return byId != null;
     }
 
-    // 点赞
+    // 点赞、取消点赞
     @Override
     public Result<String> videoLike(Integer videoId) {
         Map<String, Object> map = ThreadLocalUtil.get();
         Long userId = (Long) map.get("id");
 
-        if (userVideoMapper.findVideoLikeById(videoId) == 0) {
-            Video video = userVideoMapper.findById(videoId);
-            if (video != null) {
-                videoMapper.videoLike(videoId, userId);
-                return Result.success();
-            }
-            return Result.error("该视频不存在");
+        if (userVideoMapper.findVideoLikeById(videoId, userId) == 0) {
+            userVideoMapper.updateVideoLike(videoId);
+            userVideoMapper.addVideoLike(userId, videoId);
+            return Result.success("点赞成功");
+        } else {
+            // 取消点赞
+            userVideoMapper.updateVideoLikeMinusOne(videoId);
+            userVideoMapper.deleteVideoLike(userId, videoId);
+            return Result.success("取消点赞");
         }
-        return Result.error("您已经点过赞了");
+    }
+
+    @Override
+    public Boolean findUserVideoLikeById(Integer videoId) {
+        Map<String, Object> map = ThreadLocalUtil.get();
+        Long userId = (Long) map.get("id");
+        Boolean userVideoLikeById = userVideoMapper.findUserVideoLikeById(userId, videoId);
+        if (userVideoLikeById==null){
+            return false;
+        }
+        return userVideoLikeById;
     }
 }

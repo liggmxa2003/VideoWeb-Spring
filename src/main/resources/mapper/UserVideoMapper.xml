@@ -6,23 +6,23 @@
     <!--编辑用户视频信息-->
 
     <update id="update">
-            update video
-            <set>
-                <if test="title!=null">
-                    title=#{title},
-                </if>
-                <if test="cover!=null">
-                    cover=#{cover},
-                </if>
-                <if test="content!=null">
-                    content=#{content},
-                </if>
-                <if test="videoUrl!=null">
-                    video_url=#{videoUrl},
-                </if>
-                update_time=now()
+        update video
+        <set>
+            <if test="title!=null">
+                title=#{title},
+            </if>
+            <if test="cover!=null">
+                cover=#{cover},
+            </if>
+            <if test="content!=null">
+                content=#{content},
+            </if>
+            <if test="videoUrl!=null">
+                video_url=#{videoUrl},
+            </if>
+            update_time=now()
 
-            </set>
-            where id=#{id}
-        </update>
+        </set>
+        where id=#{id}
+    </update>
 </mapper>

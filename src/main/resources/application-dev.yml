@@ -41,8 +41,8 @@ logging:
 qiniu:
   access-key: ${QINIU_ACCESS_KEY}
   secret-key: ${QINIU_SECRET_KEY}
-  bucket-name: videoplusligg
-  domain: http://sowl9rtuo.hn-bkt.clouddn.com/ #域名
+  bucket-name: animevideo
+  domain: http://sqng6krv6.hn-bkt.clouddn.com/ #域名
   video-path: videos/ # 新增的视频文件存储路径或前缀
 
 bangumi:
