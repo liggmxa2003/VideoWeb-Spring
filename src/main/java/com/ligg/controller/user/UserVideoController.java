@@ -58,12 +58,12 @@ public class UserVideoController {
         return Result.success();
     }
     // TODO 视频点赞、收藏、投币
-    @PutMapping("/userVideoLike")
+    @PutMapping("/like")
     public Result<String> videoLike(@NotNull Integer videoId){
         return userVideoService.videoLike(videoId);
     }
     // TODO 获取用户点赞、收藏、投币信息状态
-    @GetMapping("/getVideoLike")
+    @GetMapping("/like")
     public Result<Boolean> getVideoLike(@NotNull Integer videoId){
         Boolean videoLike = userVideoService.findUserVideoLikeById(videoId);
         return Result.success(videoLike);
