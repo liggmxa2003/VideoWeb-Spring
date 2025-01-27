@@ -96,32 +96,55 @@ public class UserVideoServiceImpl implements UserVideoService {
         return byId != null;
     }
 
-    // 点赞、取消点赞
+    /**
+     * @param videoId 视频id
+     * @param action  点赞、收藏
+     */
     @Override
-    public Result<String> videoLike(Integer videoId) {
+    public Result<String> saveAction(Integer videoId, String action) {
         Map<String, Object> map = ThreadLocalUtil.get();
         Long userId = (Long) map.get("id");
-
-        if (userVideoMapper.findVideoLikeById(videoId, userId) == 0) {
-            userVideoMapper.updateVideoLike(videoId);
-            userVideoMapper.addVideoLike(userId, videoId);
-            return Result.success("点赞成功");
-        } else {
-            // 取消点赞
-            userVideoMapper.updateVideoLikeMinusOne(videoId);
-            userVideoMapper.deleteVideoLike(userId, videoId);
-            return Result.success("取消点赞");
+        switch (action) {
+            case "like":
+                if (userVideoMapper.findVideoLikeById(videoId, userId) == 0) {
+                    userVideoMapper.updateVideoLike(videoId);
+                    userVideoMapper.addVideoLike(userId, videoId);
+                    return Result.success("点赞成功");
+                } else {
+                    // 取消点赞
+                    userVideoMapper.updateVideoLikeMinusOne(videoId);
+                    userVideoMapper.deleteVideoLike(userId, videoId);
+                    return Result.success("取消点赞");
+                }
+                //收藏
+            case "favorite":
+                if (userVideoMapper.findUserVideoFavoriteById(userId, videoId) == 0) {
+                    userVideoMapper.updateVideoFavorite(videoId);
+                    userVideoMapper.addVideoFavorite(userId, videoId);
+                    return Result.success("收藏成功");
+                } else {
+                    userVideoMapper.updateVideoFavoriteMinusOne(videoId);
+                    userVideoMapper.deleteVideoFavorite(userId, videoId);
+                    return Result.success("取消收藏");
+                }
         }
+        return Result.error("操作失败");
     }
 
     @Override
-    public Boolean findUserVideoLikeById(Integer videoId) {
+    public Boolean findUserVideoLikeById(Integer videoId, String action) {
         Map<String, Object> map = ThreadLocalUtil.get();
         Long userId = (Long) map.get("id");
-        Boolean userVideoLikeById = userVideoMapper.findUserVideoLikeById(userId, videoId);
-        if (userVideoLikeById==null){
-            return false;
-        }
-        return userVideoLikeById;
+        return switch (action) {
+            case "like" -> {
+                Boolean userVideoLikeById = userVideoMapper.findUserVideoLikeById(userId, videoId);
+                yield Objects.requireNonNullElse(userVideoLikeById, false);
+            }
+            case "favorite" -> {
+                int userVideoFavoriteById = userVideoMapper.findUserVideoFavoriteById(userId, videoId);
+                yield userVideoFavoriteById != 0;
+            }
+            default -> false;
+        };
     }
 }

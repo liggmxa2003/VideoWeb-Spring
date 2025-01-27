@@ -17,8 +17,8 @@ public interface UserVideoService {
     Boolean listByUserId(Video userVideo);
     // 根据id查询
     boolean findById(Integer id);
-    // 视频点赞
-    Result<String> videoLike(Integer videoId);
+    //操作
+    Result<String> saveAction(Integer videoId, String action);
     //
-    Boolean findUserVideoLikeById(Integer videoId);
+    Boolean findUserVideoLikeById(Integer videoId,String action);
 }

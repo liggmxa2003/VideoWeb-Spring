@@ -26,10 +26,4 @@ public class VideoController {
         Video video = videoService.findById(id);
         return Result.success(video);
     }
-    //视频点赞数、收藏
-    @GetMapping("/videoLike/{videoId}")
-    public Result<Integer> videoLike(@PathVariable("videoId") Integer videoId){
-        Integer like = videoService.findVideoLikeById(videoId);
-        return Result.success(like);
-    }
 }

@@ -5,6 +5,7 @@ import com.ligg.pojo.Result;
 import com.ligg.pojo.Video;
 import com.ligg.service.User.UserVideoService;
 import com.ligg.service.VideoService;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -58,14 +59,16 @@ public class UserVideoController {
         return Result.success();
     }
     // TODO 视频点赞、收藏、投币
-    @PutMapping("/like")
-    public Result<String> videoLike(@NotNull Integer videoId){
-        return userVideoService.videoLike(videoId);
+    @PutMapping("/{videoId}/doAction")
+    public Result<String> videoLike(@PathVariable @NotNull Integer videoId,
+                                    @NotEmpty String action){
+        return userVideoService.saveAction(videoId,action);
     }
     // TODO 获取用户点赞、收藏、投币信息状态
-    @GetMapping("/like")
-    public Result<Boolean> getVideoLike(@NotNull Integer videoId){
-        Boolean videoLike = userVideoService.findUserVideoLikeById(videoId);
+    @GetMapping("/{videoId}/doAction")
+    public Result<Boolean> getVideoLike(@PathVariable @NotNull Integer videoId,
+                                        @NotEmpty String action){
+        Boolean videoLike = userVideoService.findUserVideoLikeById(videoId,action);
         return Result.success(videoLike);
     }
 }

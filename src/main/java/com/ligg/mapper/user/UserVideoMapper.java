@@ -34,16 +34,38 @@ public interface UserVideoMapper {
     // 更新视频点赞数
     @Update("update video set likes_count=likes_count+1 where id=#{videoId}")
     void updateVideoLike(Integer videoId);
-    @Insert("insert into video_like(user_id,video_id)" +
-    "values (#{userId},#{videoId})")
+
+    @Insert("insert into video_likes(user_id,video_id)" +
+            "values (#{userId},#{videoId})")
     void addVideoLike(Long userId, Integer videoId);
+
     // 查询用户是否点赞过视频
-    @Select("select count(id) from video_like where video_id=#{videoId} and user_id=#{userId}")
+    @Select("select count(id) from video_likes where video_id=#{videoId} and user_id=#{userId}")
     int findVideoLikeById(Integer videoId, Long userId);
+
     @Update("update video set likes_count=likes_count-1 where id=#{videoId}")
     void updateVideoLikeMinusOne(Integer videoId);
-    @Delete("delete from video_like where user_id=#{userId} and video_id=#{videoId}")
+
+    @Delete("delete from video_likes where user_id=#{userId} and video_id=#{videoId}")
     void deleteVideoLike(Long userId, Integer videoId);
-    @Select("select * from video_like where user_id=#{userId} and video_id=#{videoId}")
+
+    @Select("select * from video_likes where user_id=#{userId} and video_id=#{videoId}")
     Boolean findUserVideoLikeById(Long userId, Integer videoId);
+
+    //更新视频收藏数
+    @Update("update video set favorite_count=favorite_count+1 where id=#{videoId}")
+    void updateVideoFavorite(Integer videoId);
+
+    @Insert("insert into video_favorite(user_id,video_id,Favorite_at)" +
+            "values (#{userId},#{videoId},NOW())")
+    void addVideoFavorite(Long userId, Integer videoId);
+
+    @Select("select count(id) from video_favorite where video_id=#{videoId} and user_id=#{userId}")
+    int findUserVideoFavoriteById(Long userId, Integer videoId);
+
+    @Update("update video set favorite_count=favorite_count-1 where id=#{videoId}")
+    void updateVideoFavoriteMinusOne(Integer videoId);
+
+    @Delete("delete from video_favorite where user_id=#{userId} and video_id=#{videoId}")
+    void deleteVideoFavorite(Long userId, Integer videoId);
 }

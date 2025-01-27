@@ -16,8 +16,8 @@ public interface VideoMapper {
     @Select("select id,title,cover,content,video_url,create_time from video where user_id=#{userId}")
     List<Video> findVideoByUserId(Long userId);
     // 查询点赞数
-    @Select("select count(id) from video_like where video_id=#{videoId}")
+    @Select("select count(id) from video_action where video_id=#{videoId}")
     Integer findVideoLikeById(Integer videoId);
-    @Select("select * from video_like where video_id=#{id} and user_id=#{userId}")
+    @Select("select * from video_action where video_id=#{id} and user_id=#{userId}")
     Video isUserLike(Integer id, Long userId);
 }
