@@ -105,7 +105,7 @@ public class BanguimController {
             JsonNode jsonNode = objectMapper.readTree(responseBody);
             String correctedJson = objectMapper.writeValueAsString(jsonNode);
 
-            Map<String, Object> userInfoMap = objectMapper.readValue(correctedJson, Map.class);
+            Map userInfoMap = objectMapper.readValue(correctedJson, Map.class);
 
             if (!userInfoMap.containsKey("username")) {
                 return Result.error("获取用户信息失败");
