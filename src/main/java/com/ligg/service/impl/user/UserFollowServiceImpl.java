@@ -7,10 +7,13 @@ import com.ligg.pojo.user.UserFollow;
 import com.ligg.service.User.UserFollowService;
 import com.ligg.utils.ThreadLocalUtil;
 import jakarta.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class UserFollowServiceImpl implements UserFollowService {
