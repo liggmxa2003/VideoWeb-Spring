@@ -79,7 +79,8 @@
 
 ## 首页
 
-### ![首页](src/assets/项目介绍/首页.png)
+### ![首页](https://github.com/user-attachments/assets/2822bca4-af8a-46e3-be34-4d0fcdbac8d2)
+
 
 ## 番剧页
 
