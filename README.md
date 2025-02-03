@@ -84,21 +84,21 @@
 
 ## 番剧页
 
-### ![首页](src/assets/项目介绍/番剧页面.png)
+### ![番剧页面](https://github.com/user-attachments/assets/d6fe3a93-1b79-48e3-aa85-6433691e2496)
+
 
 ## 播放页
 
-### **![播放页](src/assets/项目介绍/播放页面.png)**
+### ![image](https://github.com/user-attachments/assets/d8cdda9c-8a67-4f60-a86b-57caeafd42df)
+
 
 ## 个人中心
 
-### **![首页](src/assets/项目介绍/用户中心.png)**
+### ![image](https://github.com/user-attachments/assets/33fe5d30-cd54-45b1-8b86-23efc8961c41)
 
-## 个人资料
-
-### **![首页](src/assets/项目介绍/个人资料.png)**
 
 ## 私信页
 
-### **![首页](src/assets/项目介绍/私信页面.png)**
+### ![image](https://github.com/user-attachments/assets/66ed38ca-cae9-45f5-b926-849464281811)
+
 
