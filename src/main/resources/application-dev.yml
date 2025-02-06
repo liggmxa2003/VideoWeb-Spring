@@ -2,7 +2,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/blibliweb?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8
+    url: jdbc:mysql://43.139.210.148:3306/blibliweb?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8
     username: root
     password: 200309
   ## 邮件配置
@@ -14,8 +14,9 @@ spring:
   data:
     ##Redis非关系形数据库配置
     redis:
-      port: 6379
-      host: 127.0.0.1
+      port: 26739
+      host: 43.139.210.148
+      password: 200309
   servlet:
     # 配置servlet的multipart设置，用于文件上传
     multipart:
