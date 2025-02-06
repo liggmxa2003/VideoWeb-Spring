@@ -23,7 +23,7 @@ import java.util.Map;
 //用户接口
 @Validated
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 public class UserController {
 
     @Autowired

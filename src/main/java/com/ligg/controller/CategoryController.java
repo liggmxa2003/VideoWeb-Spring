@@ -11,7 +11,7 @@ import java.util.List;
 
 //分类接口
 @RestController
-@RequestMapping("/category")
+@RequestMapping("/api/category")
 public class CategoryController {
 
     @Autowired

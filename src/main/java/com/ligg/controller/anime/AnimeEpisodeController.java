@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/anime/episode")
+@RequestMapping("/api/anime/episode")
 public class AnimeEpisodeController {
 
     @Resource

@@ -12,7 +12,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/user/video")
+@RequestMapping("/api/user/video")
 public class UserVideoController {
 
 

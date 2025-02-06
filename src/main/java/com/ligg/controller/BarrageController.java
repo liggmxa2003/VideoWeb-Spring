@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/user/barrage")
+@RequestMapping("/api/user/barrage")
 public class BarrageController {
 
     @Autowired
@@ -20,9 +20,5 @@ public class BarrageController {
     public Result<String> sendBarrage(@RequestBody Barrage barrage) {
         return Result.success(barrageService.sendBarrage(barrage));
     }
-    //获取弹幕
-    @GetMapping("/get")
-    public Result<List<Barrage>> getBarrage(@RequestParam Integer videoId) {
-        return Result.success(barrageService.getBarrage(videoId));
-    }
+
 }

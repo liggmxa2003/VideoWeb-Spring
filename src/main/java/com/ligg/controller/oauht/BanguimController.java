@@ -22,7 +22,7 @@ import java.util.Map;
 
 @Slf4j
 @RestController
-@RequestMapping("/oauht/gangumi")
+@RequestMapping("/api/oauht/gangumi")
 public class BanguimController {
 
     @Value("${bangumi.client-id}")
