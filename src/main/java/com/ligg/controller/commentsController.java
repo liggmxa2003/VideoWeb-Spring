@@ -1,5 +1,6 @@
 package com.ligg.controller;
 
+import com.ligg.anno.Log;
 import com.ligg.pojo.Comments;
 import com.ligg.pojo.Result;
 import com.ligg.service.CommentsService;
@@ -16,6 +17,7 @@ public class commentsController {
     CommentsService commentsService;
 
     //发布评论
+    @Log
     @PostMapping("/publish")
     public Result<String> publish(@RequestBody Comments comments) {
         String c = commentsService.publish(comments.getId(), comments.getContent());

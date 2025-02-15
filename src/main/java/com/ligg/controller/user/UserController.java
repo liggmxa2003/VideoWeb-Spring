@@ -1,5 +1,6 @@
 package com.ligg.controller.user;
 
+import com.ligg.anno.Log;
 import com.ligg.dto.UserDto;
 import com.ligg.pojo.Result;
 import com.ligg.pojo.user.User;
@@ -17,7 +18,11 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.Map;
+import java.util.Random;
+import java.util.UUID;
 
 
 //用户接口
@@ -80,6 +85,7 @@ public class UserController {
     }
 
     //更新用户信息
+    @Log
     @PutMapping("/updateUser")
     public Result<String> update(@RequestBody @Validated(User.Update.class) User user) throws QiniuException {
         String update = userService.update(user);
@@ -90,6 +96,7 @@ public class UserController {
     }
 
     //更新用户头像
+    @Log
     @PatchMapping("/updateAvatar")
     public Result<String> updateAvatar(@RequestParam @URL String avatarUrl) {
         userService.updateAvatar(avatarUrl);
@@ -106,7 +113,7 @@ public class UserController {
 
     //用户首页信息
     @GetMapping("/homeList")
-    public Result<UserDto> userInfoList(@RequestParam(required = false) String username) {
+    public Result<UserDto> userHomeList(@RequestParam(required = false) String username) {
         if (username == null) {
             Map<String, Object> map = ThreadLocalUtil.get();
             String user = (String) map.get("username");
@@ -116,39 +123,4 @@ public class UserController {
         UserDto userInfoDto = userService.getUserHomeList(username);
         return Result.success(userInfoDto);
     }
-
-
-
-   /* //修改密码
-    @PatchMapping("/updatePassword")
-    public Result<String> updatePassword(@RequestBody Map<String, String> params, @RequestHeader("Authorization") String token) {
-        //参数校验
-        String oldPassword = params.get("old_pwd");
-        String newPassword = params.get("new_pwd");
-        String rePassword = params.get("re_pwd");
-        if (!StringUtils.hasLength(oldPassword) || !StringUtils.hasLength(newPassword) || !StringUtils.hasLength(rePassword)) {
-            return Result.error("缺少参数");
-        }
-        //获取用户信息
-        User loginUser = userService.findByUsername();
-        if (!loginUser.getPassword().equals(Md5Util.getMD5String(oldPassword))) {
-            return Result.error("原始码错误");
-        }
-        if (!rePassword.equals(newPassword)) {
-            return Result.error("两次密码不一致");
-        }
-        if (loginUser.getPassword().equals(Md5Util.getMD5String(newPassword))) {
-            return Result.error("新密码不能与原始密码一致");
-        }
-        //判断密码是否小于5位，大于15位
-        if (newPassword.length() < 5 || newPassword.length() > 15) {
-            return Result.error("密码长度需在5-15位之间");
-        }
-        //修改密码
-        userService.updatePassword(newPassword, loginUser.getId());
-        //删除token
-        ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
-        operations.getOperations().delete(token);
-        return Result.success();
-    }*/
 }

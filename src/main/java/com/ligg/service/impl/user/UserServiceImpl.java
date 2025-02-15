@@ -10,10 +10,7 @@ import com.ligg.pojo.Video;
 import com.ligg.pojo.user.User;
 import com.ligg.pojo.user.UserFollow;
 import com.ligg.service.User.UserService;
-import com.ligg.utils.JwtUtil;
-import com.ligg.utils.Md5Util;
-import com.ligg.utils.QiNiuOssUtil;
-import com.ligg.utils.ThreadLocalUtil;
+import com.ligg.utils.*;
 import com.qiniu.common.QiniuException;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +23,7 @@ import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -93,7 +91,6 @@ public class UserServiceImpl implements UserService {
     public User findUseInfo(User user) {
         return userMapper.findByUserName(user.getUsername());
     }
-
     //注册用户
     @Override
     public String register(User user, String sessionId) {
@@ -115,17 +112,13 @@ public class UserServiceImpl implements UserService {
                 user.setPassword(md5String);
                 //生成随机用户昵称
                 user.setNickname("昵称_" + UUID.randomUUID().toString().substring(0, 6));
-                //生成6到8个字符的随机整数
-                Random random = new Random();
-                String randomPart = String.valueOf((100000 + random.nextInt(900000)));
-                // 拼接固定整数
-                long fixedPart = 245L;
-                String userName = fixedPart + randomPart;
-                //判断用户账号是否重复
-                while (userMapper.findByUserName(userName) != null) {
-                    randomPart = String.valueOf((100000 + random.nextInt(900000)));
-                    userName = fixedPart + randomPart;
-                }
+                /*
+                  生成随机UUID
+                 */
+
+                BigInteger uuid = UUIDUtil.getUUID();
+                String userName = 24L + uuid.toString();
+
                 user.setUsername(userName);
                 //注册用户
                 userMapper.add(user);
@@ -138,6 +131,12 @@ public class UserServiceImpl implements UserService {
         } else {
             return "请先获取验证码";
         }
+    }
+
+    public static void main(String[] args) {
+        Random random = new Random();
+        int i = random.nextInt(1000000000);
+        System.out.println("24"+i);
     }
 
     //重置密码
@@ -309,7 +308,7 @@ public class UserServiceImpl implements UserService {
                 }
             }
             userMapper.update(user);
-           //删除Redis中用户信息
+            //删除Redis中用户信息
             stringRedisTemplate.delete("userInfo:" + user.getUsername());
         } catch (Exception e) {
             // 处理数据库查询异常
@@ -378,5 +377,4 @@ public class UserServiceImpl implements UserService {
             return "验证码获取失败，请检查邮箱是否正确";
         }
     }
-
 }

@@ -1,5 +1,6 @@
 package com.ligg.controller.user;
 
+import com.ligg.anno.Log;
 import com.ligg.pojo.Result;
 import com.ligg.pojo.user.UserFollowData;
 import com.ligg.pojo.user.UserFollow;
@@ -17,6 +18,7 @@ public class UserFollowController {
     UserFollowService userFollowService;
 
     // 关注或取消关注
+    @Log
     @PutMapping("/{id}")
     public Result<String> follow(@PathVariable("id") Long id, Boolean isFollow) {
         return userFollowService.follow(id,isFollow);

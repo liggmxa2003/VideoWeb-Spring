@@ -1,5 +1,6 @@
 package com.ligg.controller;
 
+import com.ligg.anno.Log;
 import com.ligg.pojo.Result;
 import com.ligg.service.User.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -26,6 +27,7 @@ public class EmailController {
     }
 
     //发送重置密码邮箱验证码
+    @Log
     @PostMapping("/forget")
     public Result<String> forget(@RequestParam("email") @Email String email, HttpSession session) {
         String s = userService.sendValidateCode(email, session.getId(),true);

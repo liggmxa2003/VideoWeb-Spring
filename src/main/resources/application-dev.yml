@@ -2,7 +2,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://43.139.210.148:3306/blibliweb?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8
+    url: jdbc:mysql://129.204.224.233:13306/blibliweb?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8
     username: root
     password: 200309
   ## 邮件配置
@@ -10,12 +10,20 @@ spring:
     host: smtp.163.com
     username: 19971481405@163.com
     password: ${MAIL_PASSWORD} #环境变量中获取秘钥
-    port: 25
+    port: 465
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          ssl:
+            enable: true
   data:
     ##Redis非关系形数据库配置
     redis:
       port: 26739
-      host: 43.139.210.148
+      host: 129.204.224.233
       password: 200309
   servlet:
     # 配置servlet的multipart设置，用于文件上传
@@ -47,6 +55,6 @@ qiniu:
   video-path: videos/ # 新增的视频文件存储路径或前缀
 
 bangumi:
-  client-id: bgm34586768ae15029bd
-  clinet-secret: 91c137068032226c437c3b4590e3a0dd
+  client-id: 1231313
+  clinet-secret: 1231312
   redirect-uri: http://localhost:5173/oauth/callback

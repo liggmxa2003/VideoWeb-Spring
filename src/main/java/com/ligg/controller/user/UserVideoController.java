@@ -1,5 +1,6 @@
 package com.ligg.controller.user;
 
+import com.ligg.anno.Log;
 import com.ligg.pojo.PageBean;
 import com.ligg.pojo.Result;
 import com.ligg.pojo.Video;
@@ -32,6 +33,7 @@ public class UserVideoController {
         return Result.success(pb);
     }
     //发布用户视频
+    @Log
     @PostMapping
     public Result<String> add(@RequestBody @Validated(Video.Add.class) Video video){
         //发布视频
@@ -39,6 +41,7 @@ public class UserVideoController {
         return Result.success();
     }
     //编辑用户是视频
+    @Log
     @PutMapping
     public Result<String> update(@RequestBody @Validated(Video.Update.class) Video userVideo){
         Boolean u = userVideoService.listByUserId(userVideo);
@@ -48,6 +51,7 @@ public class UserVideoController {
         return Result.success();
     }
     //删除视用户视频信息
+    @Log
     @DeleteMapping
     public Result<Video> delete(Video userVideo){
         if (!userVideoService.findById(userVideo.getId()))
@@ -59,12 +63,13 @@ public class UserVideoController {
         return Result.success();
     }
     // TODO 视频点赞、收藏、投币
+    @Log
     @PutMapping("/{videoId}/doAction")
     public Result<String> videoLike(@PathVariable @NotNull Integer videoId,
                                     @NotEmpty String action){
         return userVideoService.saveAction(videoId,action);
     }
-    // TODO 获取用户点赞、收藏、投币信息状态
+    // TODO 获取点赞、收藏、投币信息状态
     @GetMapping("/{videoId}/doAction")
     public Result<Boolean> getVideoLike(@PathVariable @NotNull Integer videoId,
                                         @NotEmpty String action){
